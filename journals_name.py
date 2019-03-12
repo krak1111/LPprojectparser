@@ -1,5 +1,7 @@
 from requests_html import *
 
+from settings import *
+
 DISCIPLINES = [
     'physics-and-astronomy',
     'chemical-engineering',
@@ -12,30 +14,40 @@ DISCIPLINES = [
     'mathematics',
 ]
 
-BASE_URL = 'https://www.sciencedirect.com'
-HEADERS = {'user-agent': 'Mozilla/5.0'}
 
-def journals_titles(disciplines, headers, base_url):
+
+def main():
     parse_pesult = []
 
-    for discipline in disciplines:
-        parse_pesult.append({f'{discipline}' : parse(discipline, headers, base_url)})
+    for discipline in DISCIPLINES:
+        result = parse(discipline)
+        if result:
+            parse_pesult.append({f'{discipline}' : result})
+        else:
+            break
+
 
     print(parse_pesult)
 
-def parse(discipline, headers, base_url):
+def parse(discipline):
     session = HTMLSession()
-    k = 1
+    
     last_page_num = 5
-    i = 1
+    i = 1 # current page count
     
     journals_info = []
 
     #Pagination cycle k < 5 for garanty uninfinity cycle
     while i <= last_page_num:
 
-        url = f'{base_url}/browse/journals-and-books?page={i}&contentType=JL&subject={discipline}'
-        request = session.get(url, headers = headers)
+        url = f'{BASE_URL}/browse/journals-and-books?page={i}&contentType=JL&subject={discipline}'
+        
+        try:
+            request = session.get(url, headers = HEADERS)
+        except requests.exceptions.ConnectionError:
+            print("No connection!")
+            return False
+
         html = request.html
         selector = 'a.js-publication-title' # css class anchor-text not unique for journal title
 
@@ -43,7 +55,7 @@ def parse(discipline, headers, base_url):
 
         #parse titles
         for journal_element in journal_elements:            
-            journals_info.append({'Journal title' :journal_element.text, 'Journal url' : f'{base_url}{journal_element.links.pop()}'})
+            journals_info.append({'Journal title' :journal_element.text, 'Journal url' : f'{BASE_URL}{journal_element.links.pop()}'})
 
         #pagination check only on first iteration
         if i == 1 :
@@ -61,4 +73,4 @@ def parse(discipline, headers, base_url):
 
 
 if __name__ == '__main__':
-    journals_titles(DISCIPLINES, HEADERS, BASE_URL)
+    main()
