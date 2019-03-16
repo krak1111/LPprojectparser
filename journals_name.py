@@ -16,11 +16,12 @@ BASE_URL = 'https://www.sciencedirect.com/'
 HEADERS = {'user-agent': 'Mozilla/5.0'}
 
 def journals_titles(disciplines, headers, base_url):
-    parse_pesult = []
+    parse_result = []
     for discipline in disciplines:
-        parse_pesult.append({f'{discipline}' : parse(discipline, headers, base_url)})
+        parse_result.append({f'{discipline}' : parse(discipline, headers, base_url)})
 
-    print(parse_pesult)
+    for title in parse_result:
+        print(title)
 
 def parse(discipline, headers, base_url):
     session = HTMLSession()
