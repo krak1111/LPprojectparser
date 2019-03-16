@@ -1,61 +1,75 @@
+import json
+import os
+
 from requests_html import *
 
-DISCIPLINES = [
-    'physics-and-astronomy',
-    'chemical-engineering',
-    'chemistry',
-    'computer-science',
-    'earth-and-planetary-sciences',
-    'energy',
-    'engineering',
-    'material-science',
-    'mathematics',
-]
+from settings import *
 
-BASE_URL = 'https://www.sciencedirect.com/'
-HEADERS = {'user-agent': 'Mozilla/5.0'}
 
-def journals_titles(disciplines, headers, base_url):
-    parse_result = []
-    for discipline in disciplines:
-        parse_result.append({f'{discipline}' : parse(discipline, headers, base_url)})
 
-    for title in parse_result:
-        print(title)
+def pagination_search(page, selector = '.pagination-pages-label'):
 
-def parse(discipline, headers, base_url):
-    session = HTMLSession()
-    k = 1
+    last_page_num_str = page.find(selector, first = True).text[-1]
+    return int(last_page_num_str)
+
+
+def parse(discipline, session):
     last_page_num = 5
-    i = 1
-    titles = []
+    current_page_count = 1 
+    
+    journals_info = []
+ 
+    while current_page_count <= last_page_num:
 
-    #Pagination cycle k < 5 for garanty uninfinity cycle
-    while k < 5 and i <= last_page_num:
+        url = f'{BASE_URL}/browse/journals-and-books?page={current_page_count}&contentType=JL&subject={discipline}'
+        
+        try:
+            request = session.get(url, headers = HEADERS)
+        except requests.exceptions.ConnectionError:
+            print("No connection!")
+            return False
 
-        url = f'{base_url}browse/journals-and-books?page={i}&contentType=JL&subject={discipline}'
-        request = session.get(url, headers = headers)
         html = request.html
-        selector = 'a.js-publication-title > span.anchor-text' # css class anchor-text not unique for journal title
+        selector = 'a.js-publication-title' # Journal title in a > span
 
-        title_elements = html.find(selector) #find all elements
+        journal_elements = html.find(selector) #find all elements
 
         #parse titles
-        for title_element in title_elements:
-            title_url_form = title_element.text.lower().replace(' ', '-') #For examle: Physics and Astronomy bring to form "physics-and-astronomy"
-            titles.append(title_url_form)
-
+        for journal_element in journal_elements:            
+            journals_info.append({'Journal title' :journal_element.text, 'Journal url' : f'{BASE_URL}{journal_element.links.pop()}'})
+            # if discipline == 'computer-science':
+            #     print(f'Journal title :{journal_element.text}, Journal url : {BASE_URL}{journal_element.links.pop()}')
         #pagination check only on first iteration
-        if i == 1 :
-            try:
-                last_page_num_str = html.find('.pagination-pages-label', first = True).text[-1]
-                last_page_num = int(last_page_num_str)
+        if current_page_count == 1 :
+            try:                
+                last_page_num = pagination_search(html)
             except IndexError: # if only one page we have not a pagination element
                 break
-        i+=1
-        k+=1
+        current_page_count += 1
+    
 
-    return titles
+    return journals_info
+
+def main():
+    parse_pesult = []
+    session = HTMLSession()
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    for discipline in DISCIPLINES:
+        result = parse(discipline, session)
+        if result:
+            parse_pesult.append({f'{discipline}' : result})
+
+            with open(f'{discipline}.csv', 'w' , encoding = 'utf-8') as f:
+                f.write('Title;Url\n')
+                for journal in result:
+                    f.write(f'{journal["Journal title"]};{journal["Journal url"]}\n')
+
+        else:
+            break
+    
+
+    return parse_pesult
+
 
 if __name__ == '__main__':
-    journals_titles(DISCIPLINES, HEADERS, BASE_URL)
+    main()

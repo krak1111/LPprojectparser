@@ -1,0 +1,1096 @@
+{name: "- All Sciences -",
+    primary: {
+        "physical-sciences-and-engineering": {
+            name: "Physical Sciences and Engineering",
+            secondary: {
+                "chemical-engineering": {
+                    name: "Chemical Engineering",
+                    tertiary: {
+                        bioengineering: {
+                            name: "Bioengineering",
+                            sid: 291808
+                        },
+                        catalysis: {
+                            name: "Catalysis",
+                            sid: 291809
+                        },
+                        "chemical-engineering-general": {
+                            name: "Chemical Engineering (General)",
+                            sid: 291786
+                        },
+                        "chemical-health-and-safety": {
+                            name: "Chemical Health and Safety",
+                            sid: 291741
+                        },
+                        "colloid-and-surface-chemistry": {
+                            name: "Colloid and Surface Chemistry",
+                            sid: 291864
+                        },
+                        "filtration-and-separation": {
+                            name: "Filtration and Separation",
+                            sid: 291810
+                        },
+                        "fluid-flow-and-transfer-processes": {
+                            name: "Fluid Flow and Transfer Processes",
+                            sid: 291811
+                        },
+                        "process-chemistry-and-technology": {
+                            name: "Process Chemistry and Technology",
+                            sid: 291744
+                        }
+                    }
+                },
+                chemistry: {
+                    name: "Chemistry",
+                    tertiary: {
+                        "analytical-chemistry": {
+                            name: "Analytical Chemistry",
+                            sid: 291685
+                        },
+                        "chemistry-general": {
+                            name: "Chemistry (General)",
+                            sid: 291802
+                        },
+                        electrochemistry: {
+                            name: "Electrochemistry",
+                            sid: 291865
+                        },
+                        "inorganic-chemistry": {
+                            name: "Inorganic Chemistry",
+                            sid: 291746
+                        },
+                        "organic-chemistry": {
+                            name: "Organic Chemistry",
+                            sid: 291732
+                        },
+                        "physical-and-theoretical-chemistry": {
+                            name: "Physical and Theoretical Chemistry",
+                            sid: 291790
+                        },
+                        spectroscopy: {
+                            name: "Spectroscopy",
+                            sid: 291687
+                        }
+                    }
+                },
+                "computer-science": {
+                    name: "Computer Science",
+                    tertiary: {
+                        "artificial-intelligence": {
+                            name: "Artificial Intelligence",
+                            sid: 291866
+                        },
+                        "computational-theory-and-mathematics": {
+                            name: "Computational Theory and Mathematics",
+                            sid: 291867
+                        },
+                        "computer-graphics-and-computer-aided-design": {
+                            name: "Computer Graphics and Computer-Aided Design",
+                            sid: 291868
+                        },
+                        "computer-networks-and-communications": {
+                            name: "Computer Networks and Communications",
+                            sid: 291869
+                        },
+                        "computer-science-general": {
+                            name: "Computer Science (General)",
+                            sid: 291871
+                        },
+                        "computer-science-applications": {
+                            name: "Computer Science Applications",
+                            sid: 291870
+                        },
+                        "computer-vision-and-pattern-recognition": {
+                            name: "Computer Vision and Pattern Recognition",
+                            sid: 291872
+                        },
+                        "hardware-and-architecture": {
+                            name: "Hardware and Architecture",
+                            sid: 291716
+                        },
+                        "human-computer-interaction": {
+                            name: "Human-Computer Interaction",
+                            sid: 291873
+                        },
+                        "information-systems": {
+                            name: "Information Systems",
+                            sid: 291773
+                        },
+                        "signal-processing": {
+                            name: "Signal Processing",
+                            sid: 291874
+                        },
+                        software: {
+                            name: "Software",
+                            sid: 291791
+                        }
+                    }
+                },
+                "earth-and-planetary-sciences": {
+                    name: "Earth and Planetary Sciences",
+                    tertiary: {
+                        "atmospheric-science": {
+                            name: "Atmospheric Science",
+                            sid: 291801
+                        },
+                        "computers-in-earth-sciences": {
+                            name: "Computers in Earth Sciences",
+                            sid: 291815
+                        },
+                        "earth-and-planetary-sciences-general": {
+                            name: "Earth and Planetary Sciences (General)",
+                            sid: 291806
+                        },
+                        "earth-surface-processes": {
+                            name: "Earth-Surface Processes",
+                            sid: 291798
+                        },
+                        econogeo: {
+                            name: "Economic Geology",
+                            sid: 291709
+                        },
+                        "geochemistry-and-petrology": {
+                            name: "Geochemistry and Petrology",
+                            sid: 291712
+                        },
+                        geology: {
+                            name: "Geology",
+                            sid: 291713
+                        },
+                        geophysics: {
+                            name: "Geophysics",
+                            sid: 291822
+                        },
+                        "geotechnical-engineering-and-engineering-geology": {
+                            name: "Geotechnical Engineering and Engineering Geology",
+                            sid: 291710
+                        },
+                        oceanography: {
+                            name: "Oceanography",
+                            sid: 291799
+                        },
+                        palaentology: {
+                            name: "Palaeontology",
+                            sid: 291694
+                        },
+                        "space-and-planetary-science": {
+                            name: "Space and Planetary Science",
+                            sid: 291745
+                        },
+                        stratigraphy: {
+                            name: "Stratigraphy",
+                            sid: 291816
+                        }
+                    }
+                },
+                energy: {
+                    name: "Energy",
+                    tertiary: {
+                        "energy-general": {
+                            name: "Energy (General)",
+                            sid: 291711
+                        },
+                        "energy-engineering-and-power-technology": {
+                            name: "Energy Engineering and Power Technology",
+                            sid: 291877
+                        },
+                        "fuel-technology": {
+                            name: "Fuel Technology",
+                            sid: 291878
+                        },
+                        "nuclear-energy-and-engineering": {
+                            name: "Nuclear Energy and Engineering",
+                            sid: 291702
+                        },
+                        "renewable-energy-sustainability-and-the-environment": {
+                            name: "Renewable Energy, Sustainability and the Environment",
+                            sid: 291731
+                        }
+                    }
+                },
+                engineering: {
+                    name: "Engineering",
+                    tertiary: {
+                        "aerospace-engineering": {
+                            name: "Aerospace Engineering",
+                            sid: 291776
+                        },
+                        "automotive-engineering": {
+                            name: "Automotive Engineering",
+                            sid: 291879
+                        },
+                        "biomedical-engineering": {
+                            name: "Biomedical Engineering",
+                            sid: 291880
+                        },
+                        "civil-and-structural-engineering": {
+                            name: "Civil and Structural Engineering",
+                            sid: 291881
+                        },
+                        "computational-mechanics": {
+                            name: "Computational Mechanics",
+                            sid: 291882
+                        },
+                        "control-and-systems-engineering": {
+                            name: "Control and Systems Engineering",
+                            sid: 291883
+                        },
+                        "electrical-and-electronic-engineering": {
+                            name: "Electrical and Electronic Engineering",
+                            sid: 291718
+                        },
+                        "engineering-general": {
+                            name: "Engineering (General)",
+                            sid: 291884
+                        },
+                        "industrial-and-manufacturing-engineering": {
+                            name: "Industrial and Manufacturing Engineering",
+                            sid: 291885
+                        },
+                        "mechanical-engineering": {
+                            name: "Mechanical Engineering",
+                            sid: 291787
+                        },
+                        "mechanics-of-materials": {
+                            name: "Mechanics of Materials",
+                            sid: 291886
+                        },
+                        "ocean-engineering": {
+                            name: "Ocean Engineering",
+                            sid: 291887
+                        },
+                        "safety-risk-reliability-and-quality": {
+                            name: "Safety, Risk, Reliability and Quality",
+                            sid: 291888
+                        }
+                    }
+                },
+                "materials-science": {
+                    name: "Materials Science",
+                    tertiary: {
+                        biomaterials: {
+                            name: "Biomaterials",
+                            sid: 291681
+                        },
+                        "ceramics-and-composites": {
+                            name: "Ceramics and Composites",
+                            sid: 291788
+                        },
+                        "electronic-optical-and-magnetic-materials": {
+                            name: "Electronic, Optical and Magnetic Materials",
+                            sid: 291892
+                        },
+                        "materials-chemistry": {
+                            name: "Materials Chemistry",
+                            sid: 291689
+                        },
+                        "materials-science-general": {
+                            name: "Materials Science (General)",
+                            sid: 291777
+                        },
+                        "metals-and-alloys": {
+                            name: "Metals and Alloys",
+                            sid: 291778
+                        },
+                        nanotechnology: {
+                            name: "Nanotechnology",
+                            sid: 291940
+                        },
+                        "polymers-and-plastics": {
+                            name: "Polymers and Plastics",
+                            sid: 291785
+                        },
+                        "surfaces-coatings-and-films": {
+                            name: "Surfaces, Coatings and Films",
+                            sid: 291893
+                        }
+                    }
+                },
+                mathematics: {
+                    name: "Mathematics",
+                    tertiary: {
+                        "algebra-and-number-theory": {
+                            name: "Algebra and Number Theory",
+                            sid: 291696
+                        },
+                        analysis: {
+                            name: "Analysis",
+                            sid: 291686
+                        },
+                        "applied-mathematics": {
+                            name: "Applied Mathematics",
+                            sid: 291692
+                        },
+                        "computational-mathematics": {
+                            name: "Computational Mathematics",
+                            sid: 291697
+                        },
+                        "control-and-optimization": {
+                            name: "Control and Optimization",
+                            sid: 291818
+                        },
+                        "discrete-mathematics-and-combinatorics": {
+                            name: "Discrete Mathematics and Combinatorics",
+                            sid: 291698
+                        },
+                        "geometry-and-topology": {
+                            name: "Geometry and Topology",
+                            sid: 291699
+                        },
+                        logic: {
+                            name: "Logic",
+                            sid: 291700
+                        },
+                        "mathematical-physics": {
+                            name: "Mathematical Physics",
+                            sid: 291894
+                        },
+                        "mathematics-general": {
+                            name: "Mathematics (General)",
+                            sid: 291795
+                        },
+                        "modelling-and-simulation": {
+                            name: "Modelling and Simulation",
+                            sid: 291715
+                        },
+                        "numerical-analysis": {
+                            name: "Numerical Analysis",
+                            sid: 291701
+                        },
+                        "statistics-and-probability": {
+                            name: "Statistics and Probability",
+                            sid: 291691
+                        },
+                        "theoretical-computer-science": {
+                            name: "Theoretical Computer Science",
+                            sid: 291812
+                        }
+                    }
+                },
+                "physics-and-astronomy": {
+                    name: "Physics and Astronomy",
+                    tertiary: {
+                        "acoustics-and-ultrasonics": {
+                            name: "Acoustics and Ultrasonics",
+                            sid: 291930
+                        },
+                        "astronomy-and-astrophysics": {
+                            name: "Astronomy and Astrophysics",
+                            sid: 291794
+                        },
+                        "atomic-and-molecular-physics-and-optics": {
+                            name: "Atomic and Molecular Physics, and Optics",
+                            sid: 291821
+                        },
+                        "condensed-matter-physics": {
+                            name: "Condensed Matter Physics",
+                            sid: 291719
+                        },
+                        instrumentation: {
+                            name: "Instrumentation",
+                            sid: 291827
+                        },
+                        "nuclear-and-high-energy-physics": {
+                            name: "Nuclear and High Energy Physics",
+                            sid: 291829
+                        },
+                        "physics-and-astronomy-general": {
+                            name: "Physics and Astronomy (General)",
+                            sid: 291690
+                        },
+                        radiation: {
+                            name: "Radiation",
+                            sid: 291717
+                        },
+                        "statistical-and-nonlinear-physics": {
+                            name: "Statistical and Nonlinear Physics",
+                            sid: 291797
+                        },
+                        "surfaces-and-interfaces": {
+                            name: "Surfaces and Interfaces",
+                            sid: 291720
+                        }
+                    }
+                }
+            }
+        },
+        "life-sciences": {
+            name: "Life Sciences",
+            secondary: {
+                "agricultural-and-biological-sciences": {
+                    name: "Agricultural and Biological Sciences",
+                    tertiary: {
+                        "agricultural-and-biological-sciences-general": {
+                            name: "Agricultural and Biological Sciences (General)",
+                            sid: 291838
+                        },
+                        "agronomy-and-crop-science": {
+                            name: "Agronomy and Crop Science",
+                            sid: 291839
+                        },
+                        "animal-science-and-zoology": {
+                            name: "Animal Science and Zoology",
+                            sid: 291779
+                        },
+                        "aquatic-science": {
+                            name: "Aquatic Science",
+                            sid: 291707
+                        },
+                        "ecology-evolution-behavior-and-systematics": {
+                            name: "Ecology, Evolution, Behavior and Systematics",
+                            sid: 291840
+                        },
+                        "food-science": {
+                            name: "Food Science",
+                            sid: 291688
+                        },
+                        forestry: {
+                            name: "Forestry",
+                            sid: 291841
+                        },
+                        horticulture: {
+                            name: "Horticulture",
+                            sid: 291842
+                        },
+                        "insect-science": {
+                            name: "Insect Science",
+                            sid: 291843
+                        },
+                        "plant-science": {
+                            name: "Plant Science",
+                            sid: 291721
+                        },
+                        "soil-science": {
+                            name: "Soil Science",
+                            sid: 291844
+                        }
+                    }
+                },
+                "biochemistry-genetics-and-molecular-biology": {
+                    name: "Biochemistry, Genetics and Molecular Biology",
+                    tertiary: {
+                        ageing: {
+                            name: "Ageing",
+                            sid: 291846
+                        },
+                        biochemistry: {
+                            name: "Biochemistry",
+                            sid: 291847
+                        },
+                        "biochemistry-genetics-and-molecular-biology-general": {
+                            name: "Biochemistry, Genetics and Molecular Biology (General)",
+                            sid: 291848
+                        },
+                        biophysics: {
+                            name: "Biophysics",
+                            sid: 291849
+                        },
+                        biotechnology: {
+                            name: "Biotechnology",
+                            sid: 291850
+                        },
+                        "cancer-research": {
+                            name: "Cancer Research",
+                            sid: 291851
+                        },
+                        "cell-biology": {
+                            name: "Cell Biology",
+                            sid: 291852
+                        },
+                        "clinical-biochemistry": {
+                            name: "Clinical Biochemistry",
+                            sid: 291853
+                        },
+                        "developmental-biology": {
+                            name: "Developmental Biology",
+                            sid: 291854
+                        },
+                        endocrinology: {
+                            name: "Endocrinology",
+                            sid: 291855
+                        },
+                        genetics: {
+                            name: "Genetics",
+                            sid: 291856
+                        },
+                        "molecular-biology": {
+                            name: "Molecular Biology",
+                            sid: 291857
+                        },
+                        "molecular-medicine": {
+                            name: "Molecular Medicine",
+                            sid: 291858
+                        },
+                        physiology: {
+                            name: "Physiology",
+                            sid: 291733
+                        },
+                        "structural-biology": {
+                            name: "Structural Biology",
+                            sid: 291859
+                        }
+                    }
+                },
+                "environmental-science": {
+                    name: "Environmental Science",
+                    tertiary: {
+                        "ecological-modelling": {
+                            name: "Ecological Modelling",
+                            sid: 291728
+                        },
+                        ecology: {
+                            name: "Ecology",
+                            sid: 291780
+                        },
+                        "environmental-chemistry": {
+                            name: "Environmental Chemistry",
+                            sid: 291792
+                        },
+                        "environmental-engineering": {
+                            name: "Environmental Engineering",
+                            sid: 291800
+                        },
+                        "environmental-science-general": {
+                            name: "Environmental Science (General)",
+                            sid: 291767
+                        },
+                        "global-and-planetary-change": {
+                            name: "Global and Planetary Change",
+                            sid: 291714
+                        },
+                        "health-toxicology-and-mutagenesis": {
+                            name: "Health, Toxicology and Mutagenesis",
+                            sid: 291781
+                        },
+                        "management-monitoring-policy-and-law": {
+                            name: "Management, Monitoring, Policy and Law",
+                            sid: 291768
+                        },
+                        "nature-and-landscape-conservation": {
+                            name: "Nature and Landscape Conservation",
+                            sid: 291729
+                        },
+                        pollution: {
+                            name: "Pollution",
+                            sid: 291769
+                        },
+                        "waste-management-and-disposal": {
+                            name: "Waste Management and Disposal",
+                            sid: 291793
+                        },
+                        "water-science-and-technology": {
+                            name: "Water Science and Technology",
+                            sid: 291830
+                        }
+                    }
+                },
+                "immunology-and-microbiology": {
+                    name: "Immunology and Microbiology",
+                    tertiary: {
+                        "applied-microbiology-and-biotechnology": {
+                            name: "Applied Microbiology and Biotechnology",
+                            sid: 291832
+                        },
+                        immunology: {
+                            name: "Immunology",
+                            sid: 291693
+                        },
+                        "immunology-and-microbiology-general": {
+                            name: "Immunology and Microbiology (General)",
+                            sid: 291889
+                        },
+                        microbiology: {
+                            name: "Microbiology",
+                            sid: 291783
+                        },
+                        parasitology: {
+                            name: "Parasitology",
+                            sid: 291890
+                        },
+                        virology: {
+                            name: "Virology",
+                            sid: 291891
+                        }
+                    }
+                },
+                neuroscience: {
+                    name: "Neuroscience",
+                    tertiary: {
+                        "behavioral-neuroscience": {
+                            name: "Behavioral Neuroscience",
+                            sid: 291833
+                        },
+                        "biological-psychiatry": {
+                            name: "Biological Psychiatry",
+                            sid: 291730
+                        },
+                        "cellular-and-molecular-neuroscience": {
+                            name: "Cellular and Molecular Neuroscience",
+                            sid: 291737
+                        },
+                        "cognitive-neuroscience": {
+                            name: "Cognitive Neuroscience",
+                            sid: 291738
+                        },
+                        "developmental-neuroscience": {
+                            name: "Developmental Neuroscience",
+                            sid: 291734
+                        },
+                        "endocrine-and-autonomic-systems": {
+                            name: "Endocrine and Autonomic Systems",
+                            sid: 291725
+                        },
+                        neurology: {
+                            name: "Neurology",
+                            sid: 291834
+                        },
+                        "neuroscience-general": {
+                            name: "Neuroscience (General)",
+                            sid: 291735
+                        },
+                        "sensory-systems": {
+                            name: "Sensory Systems",
+                            sid: 291736
+                        }
+                    }
+                }
+            }
+        },
+        "health-sciences": {
+            name: "Health Sciences",
+            secondary: {
+                "medicine-and-dentistry": {
+                    name: "Medicine and Dentistry",
+                    tertiary: {
+                        "anesthesiology-and-pain-medicine": {
+                            name: "Anesthesiology and Pain Medicine",
+                            sid: 291895
+                        },
+                        "cardiology-and-cardiovascular-medicine": {
+                            name: "Cardiology and Cardiovascular Medicine",
+                            sid: 291896
+                        },
+                        "clinical-neurology": {
+                            name: "Clinical Neurology",
+                            sid: 291905
+                        },
+                        "complementary-and-alternative-medicine": {
+                            name: "Complementary and Alternative Medicine",
+                            sid: 291897
+                        },
+                        "critical-care-and-intensive-care-medicine": {
+                            name: "Critical Care and Intensive Care Medicine",
+                            sid: 291898
+                        },
+                        "dentistry-oral-surgery-and-medicine": {
+                            name: "Dentistry, Oral Surgery and Medicine",
+                            sid: 291722
+                        },
+                        dermatology: {
+                            name: "Dermatology",
+                            sid: 291740
+                        },
+                        "emergency-medicine": {
+                            name: "Emergency Medicine",
+                            sid: 291899
+                        },
+                        "endocrinology-diabetes-and-metabolism": {
+                            name: "Endocrinology, Diabetes and Metabolism",
+                            sid: 291900
+                        },
+                        "forensic-medicine": {
+                            name: "Forensic Medicine",
+                            sid: 291825
+                        },
+                        gastroenterology: {
+                            name: "Gastroenterology",
+                            sid: 291742
+                        },
+                        "geriatrics-and-gerontology": {
+                            name: "Geriatrics and Gerontology",
+                            sid: 291941
+                        },
+                        "health-informatics": {
+                            name: "Health Informatics",
+                            sid: 291901
+                        },
+                        hematology: {
+                            name: "Hematology",
+                            sid: 291819
+                        },
+                        hepatology: {
+                            name: "Hepatology",
+                            sid: 291902
+                        },
+                        "immunology-allergology-and-rheumatology": {
+                            name: "Immunology, Allergology and Rheumatology",
+                            sid: 291903
+                        },
+                        "infectious-diseases": {
+                            name: "Infectious Diseases",
+                            sid: 291904
+                        },
+                        "medicine-and-dentistry-general": {
+                            name: "Medicine and Dentistry (General)",
+                            sid: 291682
+                        },
+                        nephrology: {
+                            name: "Nephrology",
+                            sid: 291739
+                        },
+                        "obstetrics-gynecology-and-womens-health": {
+                            name: "Obstetrics, Gynecology and Women's Health",
+                            sid: 291906
+                        },
+                        oncology: {
+                            name: "Oncology",
+                            sid: 291907
+                        },
+                        ophthalmology: {
+                            name: "Ophthalmology",
+                            sid: 291684
+                        },
+                        "orthopedics-sports-medicine-and-rehabilitation": {
+                            name: "Orthopedics, Sports Medicine and Rehabilitation",
+                            sid: 291695
+                        },
+                        "otorhinolaryngology-and-facial-plastic-surgery": {
+                            name: "Otorhinolaryngology and Facial Plastic Surgery",
+                            sid: 291724
+                        },
+                        "pathology-and-medical-technology": {
+                            name: "Pathology and Medical Technology",
+                            sid: 291908
+                        },
+                        "perinatology-pediatrics-and-child-health": {
+                            name: "Perinatology, Pediatrics and Child Health",
+                            sid: 291909
+                        },
+                        "psychiatry-and-mental-health": {
+                            name: "Psychiatry and Mental Health",
+                            sid: 291803
+                        },
+                        "public-health-and-health-policy": {
+                            name: "Public Health and Health Policy",
+                            sid: 291910
+                        },
+                        "pulmonary-and-respiratory-medicine": {
+                            name: "Pulmonary and Respiratory Medicine",
+                            sid: 291911
+                        },
+                        "radiology-and-imaging": {
+                            name: "Radiology and Imaging",
+                            sid: 291703
+                        },
+                        surgery: {
+                            name: "Surgery",
+                            sid: 291683
+                        },
+                        transplantation: {
+                            name: "Transplantation",
+                            sid: 291912
+                        },
+                        urology: {
+                            name: "Urology",
+                            sid: 291913
+                        }
+                    }
+                },
+                "nursing-and-health-professions": {
+                    name: "Nursing and Health Professions",
+                    tertiary: {
+                        "emergency-rescue": {
+                            name: "Emergency Rescue",
+                            sid: 291915
+                        },
+                        "manual-therapy": {
+                            name: "Manual Therapy",
+                            sid: 291916
+                        },
+                        midwifery: {
+                            name: "Midwifery",
+                            sid: 291917
+                        },
+                        nursing: {
+                            name: "Nursing",
+                            sid: 291918
+                        },
+                        "nursing-and-health-professions-general": {
+                            name: "Nursing and Health Professions (General)",
+                            sid: 291919
+                        },
+                        nutrition: {
+                            name: "Nutrition",
+                            sid: 291920
+                        },
+                        "occupational-therapy": {
+                            name: "Occupational Therapy",
+                            sid: 291921
+                        },
+                        optometry: {
+                            name: "Optometry",
+                            sid: 291922
+                        },
+                        "physical-therapy-and-rehabilitation": {
+                            name: "Physical Therapy and Rehabilitation",
+                            sid: 291923
+                        },
+                        podiatry: {
+                            name: "Podiatry",
+                            sid: 291924
+                        },
+                        "primary-care": {
+                            name: "Primary Care",
+                            sid: 291925
+                        },
+                        radiography: {
+                            name: "Radiography",
+                            sid: 291926
+                        },
+                        "sport-sciences-therapy-and-medicine": {
+                            name: "Sport Sciences, Therapy and Medicine",
+                            sid: 291927
+                        }
+                    }
+                },
+                "pharmacology-toxicology-and-pharmaceutical-science": {
+                    name: "Pharmacology, Toxicology and Pharmaceutical Science",
+                    tertiary: {
+                        "drug-discovery": {
+                            name: "Drug Discovery",
+                            sid: 291928
+                        },
+                        "pharmaceutical-science": {
+                            name: "Pharmaceutical Science",
+                            sid: 291789
+                        },
+                        pharamacology: {
+                            name: "Pharmacology",
+                            sid: 291727
+                        },
+                        "pharmacology-toxicology-and-pharmaceutics-general": {
+                            name: "Pharmacology, Toxicology and Pharmaceutics (General)",
+                            sid: 291929
+                        },
+                        toxicology: {
+                            name: "Toxicology",
+                            sid: 291835
+                        }
+                    }
+                },
+                "veterinary-science-and-veterinary-medicine": {
+                    name: "Veterinary Science and Veterinary Medicine",
+                    tertiary: {
+                        vetmed: {
+                            name: "Veterinary Medicine",
+                            sid: 291936
+                        },
+                        vetsci: {
+                            name: "Veterinary Science",
+                            sid: 291937
+                        },
+                        vetgen: {
+                            name: "Veterinary Science and Veterinary Medicine (General)",
+                            sid: 291938
+                        }
+                    }
+                }
+            }
+        },
+        "social-sciences-and-humanities": {
+            name: "Social Sciences and Humanities",
+            secondary: {
+                "arts-and-humanities": {
+                    name: "Arts and Humanities",
+                    tertiary: {
+                        "arts-and-humanities-general": {
+                            name: "Arts and Humanities (General)",
+                            sid: 291845
+                        },
+                        history: {
+                            name: "History",
+                            sid: 291824
+                        },
+                        "language-and-linguistics": {
+                            name: "Language and Linguistics",
+                            sid: 291723
+                        },
+                        "media-technology": {
+                            name: "Media Technology",
+                            sid: 291939
+                        }
+                    }
+                },
+                "business-management-and-accounting": {
+                    name: "Business, Management and Accounting",
+                    tertiary: {
+                        accounting: {
+                            name: "Accounting",
+                            sid: 291774
+                        },
+                        "business-and-international-management": {
+                            name: "Business and International Management",
+                            sid: 291860
+                        },
+                        "business-management-and-accounting-general": {
+                            name: "Business, Management and Accounting (General)",
+                            sid: 291861
+                        },
+                        "management-information-systems": {
+                            name: "Management Information Systems",
+                            sid: 291820
+                        },
+                        "management-of-technology-and-innovation": {
+                            name: "Management of Technology and Innovation",
+                            sid: 291862
+                        },
+                        marketing: {
+                            name: "Marketing",
+                            sid: 291863
+                        },
+                        "organizational-behavior-and-human-resource-management": {
+                            name: "Organizational Behavior and Human Resource Management",
+                            sid: 291826
+                        },
+                        "strategy-and-management": {
+                            name: "Strategy and Management",
+                            sid: 291943
+                        },
+                        "tourism-leisure-and-hospitality-management": {
+                            name: "Tourism, Leisure and Hospitality Management",
+                            sid: 291704
+                        }
+                    }
+                },
+                "decision-sciences": {
+                    name: "Decision Sciences",
+                    tertiary: {
+                        "decision-sciences-general": {
+                            name: "Decision Sciences (General)",
+                            sid: 291875
+                        },
+                        "information-systems-and-management": {
+                            name: "Information Systems and Management",
+                            sid: 291813
+                        },
+                        "management-science-and-operations-research": {
+                            name: "Management Science and Operations Research",
+                            sid: 291817
+                        },
+                        "statistics-probability-and-uncertainty": {
+                            name: "Statistics, Probability and Uncertainty",
+                            sid: 291814
+                        }
+                    }
+                },
+                "economics-econometrics-and-finance": {
+                    name: "Economics, Econometrics and Finance",
+                    tertiary: {
+                        "economics-and-econometrics": {
+                            name: "Economics and Econometrics",
+                            sid: 291807
+                        },
+                        "economics-econometrics-and-finance-general": {
+                            name: "Economics, Econometrics and Finance (General)",
+                            sid: 291876
+                        },
+                        finance: {
+                            name: "Finance",
+                            sid: 291775
+                        }
+                    }
+                },
+                psychology: {
+                    name: "Psychology",
+                    tertiary: {
+                        "applied-psychology": {
+                            name: "Applied Psychology",
+                            sid: 291708
+                        },
+                        "clinical-psychology": {
+                            name: "Clinical Psychology",
+                            sid: 291784
+                        },
+                        "developmental-and-educational-psychology": {
+                            name: "Developmental and Educational Psychology",
+                            sid: 291836
+                        },
+                        "experimental-and-cognitive-psychology": {
+                            name: "Experimental and Cognitive Psychology",
+                            sid: 291782
+                        },
+                        "neuropsychology-and-physiological-psychology": {
+                            name: "Neuropsychology and Physiological Psychology",
+                            sid: 291726
+                        },
+                        "psychology-general": {
+                            name: "Psychology (General)",
+                            sid: 291828
+                        },
+                        "social-psychology": {
+                            name: "Social Psychology",
+                            sid: 291805
+                        }
+                    }
+                },
+                "social-sciences": {
+                    name: "Social Sciences",
+                    tertiary: {
+                        archaeology: {
+                            name: "Archaeology",
+                            sid: 291931
+                        },
+                        development: {
+                            name: "Development",
+                            sid: 291932
+                        },
+                        education: {
+                            name: "Education",
+                            sid: 291804
+                        },
+                        "geography-planning-and-development": {
+                            name: "Geography, Planning and Development",
+                            sid: 291705
+                        },
+                        health: {
+                            name: "Health",
+                            sid: 291823
+                        },
+                        "human-factors-and-ergonomics": {
+                            name: "Human Factors and Ergonomics",
+                            sid: 291770
+                        },
+                        law: {
+                            name: "Law",
+                            sid: 291771
+                        },
+                        "library-and-information-sciences": {
+                            name: "Library and Information Sciences",
+                            sid: 291837
+                        },
+                        "linguistics-and-language": {
+                            name: "Linguistics and Language",
+                            sid: 291743
+                        },
+                        "safety-research": {
+                            name: "Safety Research",
+                            sid: 291933
+                        },
+                        "social-sciences-general": {
+                            name: "Social Sciences (General)",
+                            sid: 291934
+                        },
+                        "sociology-and-political-science": {
+                            name: "Sociology and Political Science",
+                            sid: 291706
+                        },
+                        transportation: {
+                            name: "Transportation",
+                            sid: 291772
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
