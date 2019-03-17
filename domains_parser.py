@@ -85,7 +85,8 @@ def main():
     json_loader = json.loads(format_to_json(file_path))  # Православый json
     output = json_handling(json_loader)
     d = DomainsContainer(output)  # экземпляр класса контейнера для хранения и работы с даннми об областях науки
-    d.save('container')  # серилизация класса с сохранением этих данных
+    d.print_all()
+    #d.save('container')  # серилизация класса с сохранением этих данных
 
 
 if __name__ == '__main__':
