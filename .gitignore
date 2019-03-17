@@ -1,3 +1,8 @@
 test.py
 *.pyc
 *.csv
+container
+
+parser.sublime-project
+parser.sublime-workspace
+.venv/
