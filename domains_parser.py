@@ -59,18 +59,25 @@ def json_handling(json_dict) -> dict:
     науки
     """
     for current_primary_domain_dict_key in primary_domain_dict.keys():  # проход по ключам 'Primary domain name'
-        domain_dict = primary_domain_dict[f'{current_primary_domain_dict_key}']['secondary']  # словарь с данными про domain
-        output_primary_domain_name = primary_domain_dict[f'{current_primary_domain_dict_key}']['name']  # ключ 'Primary domain name'
+        domain_dict = primary_domain_dict[
+            f'{current_primary_domain_dict_key}']['secondary']  # словарь с данными про domain
+
+        output_primary_domain_name = primary_domain_dict[
+            f'{current_primary_domain_dict_key}']['name']  # ключ 'Primary domain name'
         output_domain_dict = {}  # данный словарь - значение для ключа 'Primary domain name' в обработанном виде
 
         for current_domain_dict_key in domain_dict.keys():  # проход по ключам 'domain url form'
-            subdomain_dict = domain_dict[f'{current_domain_dict_key}']['tertiary']  # переход на 5 уровень
+            subdomain_dict = domain_dict[
+                f'{current_domain_dict_key}']['tertiary']  # переход на 5 уровень
+
             output_domain_name = domain_dict[current_domain_dict_key]['name']  # ключ 'Domain name'
             output_subdomain_list = []  # данный список - значение для ключа 'Domain name'
 
             for current_subdomain_dict_key in subdomain_dict.keys():  # проход по ключам 'supdomain url form'
                 output_subdomain_dict = {}  # словарь для хранения данных в виде {'name': name, 'url': url}
-                output_subdomain_dict['name'] = subdomain_dict[current_subdomain_dict_key]['name']  # значение name
+                output_subdomain_dict['name'] = subdomain_dict[
+                    current_subdomain_dict_key]['name']  # значение name
+
                 output_subdomain_dict['url'] = current_subdomain_dict_key  # значение url
 
                 output_subdomain_list.append(output_subdomain_dict)  # добавление к списку

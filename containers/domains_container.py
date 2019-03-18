@@ -1,6 +1,3 @@
-import pickle
-
-
 class DomainsContainer(object):
     """
     Класс на входе принимает словарь с данными о названиях
@@ -31,7 +28,8 @@ class DomainsContainer(object):
         self.subdomain_level = {}
 
         for self.primary_domain_name in general_domain_dict.keys():
-            self.primary_domain_level[f'{self.primary_domain_id}'] = self.primary_domain_name
+            self.primary_domain_level[
+                f'{self.primary_domain_id}'] = self.primary_domain_name
             self.domain_id = 1
 
             self.primary_domain_dict = general_domain_dict[self.primary_domain_name]
@@ -42,12 +40,15 @@ class DomainsContainer(object):
                 self.domain_list = self.primary_domain_dict[self.domain_name]
 
                 for self.subdomain_dict in self.domain_list:
-                    self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = (self.subdomain_dict['name'], self.subdomain_dict['url'])
+                    self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = (self.subdomain_dict['name'],
+                                                                                                              self.subdomain_dict['url'])
                     self.subdomain_id += 1
 
                 self.domain_id += 1
 
             self.primary_domain_id += 1
+        self.reset_statement()
+        
 
     def print_all(self):
         """
@@ -64,19 +65,23 @@ class DomainsContainer(object):
         """
         for self.primary_domain_id in self.primary_domain_level.keys():  # Цикл по всем основным разделам
             self.current_id_str = f'{self.primary_domain_id}'  # Текущий индентификатор
-            self.current_name = self.primary_domain_level[self.current_id_str]  #Текущее название
-            print(f'{self.current_id_str}: {self.current_name}')  #Вывод на экран
+            self.current_name = self.primary_domain_level[self.current_id_str]  # Текущее название
+            print(f'{self.current_id_str}: {self.current_name}')  # Вывод на экран
 
             self.domain_id = 1
 
-            while self.domain_level.get(f'{self.primary_domain_id}.{self.domain_id}', False): #Цикл до тех пор пока существует элемент с таким ID
+            while self.domain_level.get(
+                    f'{self.primary_domain_id}.{self.domain_id}',
+                    False):  # Цикл до тех пор пока существует элемент с таким ID
                 self.current_id_str = f'{self.primary_domain_id}.{self.domain_id}'
                 self.current_name = self.domain_level[self.current_id_str]
                 print(f'{" "*4}{self.current_id_str}: {self.current_name}')
 
                 self.subdomain_id = 1
 
-                while self.subdomain_level.get(f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}', False): #Цикл до тех пор пока существует элемент с таким ID
+                while self.subdomain_level.get(
+                        f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}',
+                        False):  # Цикл до тех пор пока существует элемент с таким ID
                     self.current_id_str = f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'
                     self.current_name = self.subdomain_level[self.current_id_str]
                     print(f'{" "*8}{self.current_id_str}: {self.current_name}')
@@ -88,11 +93,15 @@ class DomainsContainer(object):
         return True
 
     def __iter__(self):
-        self.primary_domain_id = 1
-        self.domain_id = 1
-        self.subdomain_id = 1
+        """
+        Класс с сохранением состояния
+        """
+        self.primary_domain_id = self.statement_primary_domain_id
+        self.domain_id = self.statement_domain_id
+        self.subdomain_id = self.statement_subdomain_id    
         self.flag_stop_iteration = False
         return self
+
 
     def __next__(self):
         """
@@ -101,26 +110,76 @@ class DomainsContainer(object):
         название подраздела, ссылка подраздела)
         """
         if self.flag_stop_iteration:  # Если
+            self.reset_statement()
             raise StopIteration
+
+        self.save_statement()  # сохранение состояния только после прохождения итерации цикла
 
         self.output = (self.primary_domain_level[f'{self.primary_domain_id}'],
                        self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
                        self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][0],
                        self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][1])
 
-        if self.subdomain_level.get(f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id + 1}', False):  # проверка существование следующего подраздела
+        if self.subdomain_level.get(
+                f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id+1}',
+                False):  # проверка существование следующего подраздела
             self.subdomain_id += 1
-        elif self.domain_level.get(f'{self.primary_domain_id}.{self.domain_id+1}', False):  # проверка существования следующего раздела
+
+        elif self.domain_level.get(
+                f'{self.primary_domain_id}.{self.domain_id+1}',
+                False):  # проверка существования следующего раздела
             self.domain_id += 1
             self.subdomain_id = 1
-        elif self.primary_domain_level.get(f'{self.primary_domain_id + 1}', False):  # проверка существования следующего основного раздела
+
+        elif self.primary_domain_level.get(
+                f'{self.primary_domain_id + 1}',
+                False):  # проверка существования следующего основного раздела
             self.primary_domain_id += 1
             self.subdomain_id = 1
             self.domain_id = 1
+
         else:  # Данный элемент последний
             self.flag_stop_iteration = True
 
         return self.output
+
+
+    def save_statement(self):
+        """
+        Состояние храница в виде id текущеко элемента
+        """
+        self.statement_primary_domain_id = self.primary_domain_id
+        self.statement_domain_id = self.domain_id
+        self.statement_subdomain_id = self.subdomain_id
+
+        return True
+
+
+    def reset_statement(self):
+        """
+        Сброс всех индетификаторов в 1
+        """
+        self.statement_primary_domain_id = 1
+        self.statement_domain_id = 1
+        self.statement_subdomain_id = 1
+        self.primary_domain_id = 1
+        self.domain_id = 1
+        self.subdomain_id = 1
+
+        return True
+
+
+    def current_subdomain(self):
+        """
+        Возвращает текущий элемент
+        """
+        self.output = (self.primary_domain_level[f'{self.primary_domain_id}'],
+                       self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
+                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][0],
+                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][1])
+        
+        return self.output
+
 
     def save(self, file_path):
         """
