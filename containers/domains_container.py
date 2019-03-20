@@ -40,8 +40,8 @@ class DomainsContainer(object):
                 self.domain_list = self.primary_domain_dict[self.domain_name]
 
                 for self.subdomain_dict in self.domain_list:
-                    self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = (self.subdomain_dict['name'],
-                                                                                                              self.subdomain_dict['url'])
+                    self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = {'name': self.subdomain_dict['name'],
+                                                                                                              'url': self.subdomain_dict['url']}
                     self.subdomain_id += 1
 
                 self.domain_id += 1
@@ -84,7 +84,7 @@ class DomainsContainer(object):
                         False):  # Цикл до тех пор пока существует элемент с таким ID
                     self.current_id_str = f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'
                     self.current_name = self.subdomain_level[self.current_id_str]
-                    print(f'{" "*8}{self.current_id_str}: {self.current_name}')
+                    print(f'{" "*8}{self.current_id_str}: {self.current_name["name"], self.current_name["url"]}')
 
                     self.subdomain_id += 1
 
@@ -109,16 +109,16 @@ class DomainsContainer(object):
         (название основной раздела, название раздела,
         название подраздела, ссылка подраздела)
         """
-        if self.flag_stop_iteration:  # Если
+        
+        if self.flag_stop_iteration:  # Если дошли до конца
             self.reset_statement()
             raise StopIteration
 
-        self.save_statement()  # сохранение состояния только после прохождения итерации цикла
-
-        self.output = (self.primary_domain_level[f'{self.primary_domain_id}'],
-                       self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
-                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][0],
-                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][1])
+        
+        self.output = {'primary': self.primary_domain_level[f'{self.primary_domain_id}'],
+                       'domain': self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
+                       'subdomain': self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}']['name'],
+                       'url': self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}']['url']}
 
         if self.subdomain_level.get(
                 f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id+1}',
@@ -173,10 +173,10 @@ class DomainsContainer(object):
         """
         Возвращает текущий элемент
         """
-        self.output = (self.primary_domain_level[f'{self.primary_domain_id}'],
-                       self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
-                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][0],
-                       self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'][1])
+        self.output = {'primary': self.primary_domain_level[f'{self.statement_primary_domain_id}'],
+                       'domain': self.domain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}'],
+                       'subdomain': self.subdomain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}.{self.statement_subdomain_id}']['name'],
+                       'url': self.subdomain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}.{self.statement_subdomain_id}']['url']}
         
         return self.output
 

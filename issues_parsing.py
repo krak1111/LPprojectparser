@@ -63,6 +63,7 @@ def year_parsing(issn, year, session):
     for data in json_object["data"]:
         issue_name = data["volIssueSupplementText"]
         issue_url = data["uriLookup"]
+        issue_date = data["coverDateText"]
         issue_data.append({'name': issue_name, 'url': issue_url})
 
     return issue_data

@@ -1,7 +1,7 @@
 import re
 import json
 
-from domains_container import DomainsContainer
+from containers import DomainsContainer
 
 
 def format_to_json(file_path) -> dict:
