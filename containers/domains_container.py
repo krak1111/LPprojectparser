@@ -1,5 +1,7 @@
+import pickle
 class DomainsContainer(object):
     """
+    Трехуровневый контейнер для хранения данных о разделах
     Класс на входе принимает словарь с данными о названиях
     основных разделов науки их разделов и
     названиях подразделов с ссылками на них
@@ -17,7 +19,7 @@ class DomainsContainer(object):
     Каждый из этих уровней представлен в виде словаря:
         1. {'ID': 'Name of primary domain'}, где ID - числа начиная с 1
         2. {'ID': 'Name of domain'}, где ID представляют собой форму ID_primary.ID_domain(внутри основного раздела)
-        3. {'ID': ('Name of subdomain', 'url of subdomain')}, где ID редставляют собой форму 
+        3. {'ID': ('Name of subdomain', 'url of subdomain')}, где ID редставляют собой форму
                                                               ID_primary.ID_domain(внутри основного раздела).ID_subdomain(внутри раздела)
 
     """
@@ -40,15 +42,16 @@ class DomainsContainer(object):
                 self.domain_list = self.primary_domain_dict[self.domain_name]
 
                 for self.subdomain_dict in self.domain_list:
-                    self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = {'name': self.subdomain_dict['name'],
-                                                                                                              'url': self.subdomain_dict['url']}
+                    self.subdomain_level[
+                        f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}'] = {'name': self.subdomain_dict['name'],
+                                                                                             'url': self.subdomain_dict['url']}
                     self.subdomain_id += 1
 
                 self.domain_id += 1
 
             self.primary_domain_id += 1
         self.reset_statement()
-        
+
 
     def print_all(self):
         """
@@ -63,7 +66,7 @@ class DomainsContainer(object):
         2 Основной раздел 2
         ...
         """
-        for self.primary_domain_id in self.primary_domain_level.keys():  # Цикл по всем основным разделам
+        for self.primary_domain_id in self.primary_domain_level:  # Цикл по всем основным разделам
             self.current_id_str = f'{self.primary_domain_id}'  # Текущий индентификатор
             self.current_name = self.primary_domain_level[self.current_id_str]  # Текущее название
             print(f'{self.current_id_str}: {self.current_name}')  # Вывод на экран
@@ -181,9 +184,12 @@ class DomainsContainer(object):
         return self.output
 
 
-    def save(self, file_path):
+    def save(self, file_path='domain'):
         """
         серилизация и сохранение объекта
         """
+        self.statement_primary_domain_id = self.primary_domain_id
+        self.statement_domain_id = self.domain_id
+        self.statement_subdomain_id = self.subdomain_id
         with open(file_path, 'wb') as file:
             pickle.dump(self, file)

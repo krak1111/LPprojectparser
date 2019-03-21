@@ -58,7 +58,7 @@ def json_handling(json_dict) -> dict:
     2. Следующий цикл проходится по ключам, соответствующим названиям разделов
     науки
     """
-    for current_primary_domain_dict_key in primary_domain_dict.keys():  # проход по ключам 'Primary domain name'
+    for current_primary_domain_dict_key in primary_domain_dict:  # проход по ключам 'Primary domain name'
         domain_dict = primary_domain_dict[
             f'{current_primary_domain_dict_key}']['secondary']  # словарь с данными про domain
 
@@ -66,14 +66,14 @@ def json_handling(json_dict) -> dict:
             f'{current_primary_domain_dict_key}']['name']  # ключ 'Primary domain name'
         output_domain_dict = {}  # данный словарь - значение для ключа 'Primary domain name' в обработанном виде
 
-        for current_domain_dict_key in domain_dict.keys():  # проход по ключам 'domain url form'
+        for current_domain_dict_key in domain_dict:  # проход по ключам 'domain url form'
             subdomain_dict = domain_dict[
                 f'{current_domain_dict_key}']['tertiary']  # переход на 5 уровень
 
             output_domain_name = domain_dict[current_domain_dict_key]['name']  # ключ 'Domain name'
             output_subdomain_list = []  # данный список - значение для ключа 'Domain name'
 
-            for current_subdomain_dict_key in subdomain_dict.keys():  # проход по ключам 'supdomain url form'
+            for current_subdomain_dict_key in subdomain_dict:  # проход по ключам 'supdomain url form'
                 output_subdomain_dict = {}  # словарь для хранения данных в виде {'name': name, 'url': url}
                 output_subdomain_dict['name'] = subdomain_dict[
                     current_subdomain_dict_key]['name']  # значение name
@@ -91,8 +91,8 @@ def main():
     file_path = 'domains.json'
     json_loader = json.loads(format_to_json(file_path))  # Православый json
     output = json_handling(json_loader)
-    d = DomainsContainer(output)  # экземпляр класса контейнера для хранения и работы с даннми об областях науки
-    d.print_all()
+    domain = DomainsContainer(output)  # экземпляр класса контейнера для хранения и работы с даннми об областях науки
+    domain.print_all()
     #d.save('container')  # серилизация класса с сохранением этих данных
 
 

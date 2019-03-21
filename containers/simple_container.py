@@ -1,3 +1,4 @@
+import pickle
 class SimpleContainer(object):
 
     def __init__(self, input_list):
@@ -43,5 +44,12 @@ class SimpleContainer(object):
 
     def current(self):
         self.output = self.storage_dict[self.statement_current_id]
-
         return self.output
+
+    def save(self, file_path):
+        """
+        серилизация и сохранение объекта
+        """
+        self.statement_current_id = self.current_id
+        with open(file_path, 'wb') as file:
+            pickle.dump(self, file)

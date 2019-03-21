@@ -1,12 +1,9 @@
-import json
-import re
-import time
-
+from secondary_functions import *
 from settings import HEADERS, BASE_URL
 
 def journal_names_list(url, session) -> list:
     """
-    Эта функция парсит url сабдомейна 
+    Эта функция парсит страницу сабдомейна
     и выводит список словарей с названиями журналов и их урлами
     """
     current_page_count = 1
@@ -43,78 +40,65 @@ def journal_names_list(url, session) -> list:
 
 
 def issues_dict(url, session) -> dict:
-    
+    """
+    Данная функция парсит серию страниц для одного журнала и
+    возвращает словарь типа {'date': Дата выпуска, 'url': адресс выпуска}
+    """
     absolute_url = f'{url}/issues'
-    
     request = session.get(absolute_url, headers=HEADERS)
     journal_page = request.html
     issn = get_issn(journal_page)
-    volume_years = search_volumes_year(journal_page,absolute_url, session)
+    volume_years = get_volumes_year(journal_page, absolute_url, session)
 
     output_dict = {}
     for volume_year in volume_years:
-        
         output_dict[f'{volume_year}'] = get_issue_info(issn,
                                                        volume_year,
                                                        session)
     return output_dict
 
 
-def get_issue_info(issn, year, session) -> list:
-    year_url = f'{BASE_URL}/journal/{issn}/year/{year}/issues'   
+def articles_list(journal_url, issue_url, session) -> list:
+    """
+    Эта функция парсит страницу выпуска
+    и выводит список словарей с названиями статей  и url
+    """
+    absolute_url = f'{journal_url}{issue_url}'
+    output_list = []
+    request = session.get(absolute_url, headers=HEADERS)
+    page = request.html
+    selector = 'dl.article-content'
+    articles = page.find(selector)  # Получает список экземпляров класса Elemen, удовлетворяющие поиску
 
-    request = session.get(year_url, headers=HEADERS)  # reply will be a JSON object
+    for article in articles:
+        if article.find('span.js-article-subtype'):  # если присутствует характер статьи, значит это статья)
+            article_element = article.find('a.article-content-title', first=True)
+            output_list.append({'name': article_element.text,
+                                'url': article_element.links.pop()})
 
-    volume_json = request.text  # get json format text
+    return output_list
 
-    json_object = json.loads(volume_json)  # read json
+def article_info_dict(url, session) -> dict:
+    """
+    Парсит информацию о статье
+    вывод в виде dict
+    {'type':'', 'doi': '', 'abstract':}
+    """
+    absolute_url = f'{BASE_URL}{url}'
+    request = session.get(absolute_url, headers=HEADERS)
+    page = request.html
+  
+    doi = page.find('a.doi', first=True).text
+    selector = 'div.abstract.author'
+    abstract_elements = page.find(selector)
+    if abstract_elements:
+        abstract = ''
+        for abstract_element in abstract_elements:
+            abstract += abstract_element.text
+    else:
+        abstract = None
 
-    issue_data = []
-
-    for data in json_object["data"]:
-        issue_data.append({'date': data["coverDateText"],
-                           'url': data["uriLookup"]})
+    output_dict = {'doi': doi, 'abstract': abstract.replace('\n', '')}
 
 
-    return issue_data
-
-
-def get_issn(page) -> str:
-    selector = 'p.js-issn'
-
-    issn_text = page.find(selector, first=True).text[-9:]
-    issn = issn_text.replace('-', '')
-
-    return issn
-
-def search_volumes_year(journal_page, url, session) -> list:
-    
-    try:
-        last_page_num = pagination_search(journal_page)
-    except AttributeError: # if only one page we have not a pagination element
-        last_page_num = 1
-    
-    year_pattern = re.compile(r'^([0-9]+)')
-    selector = 'span.accordion-title'
-    volume_titles = journal_page.find(selector)
-    years = []
-
-    #
-    for volume_title in volume_titles:
-        years.append(year_pattern.search(volume_title.text).group())
-
-    for page_num in range(2, last_page_num + 1):
-        time.sleep(2)
-        journal_page = session.get(url=f'{url}?page={page_num}', headers=HEADERS).html
-        volume_titles = journal_page.find(selector)
-
-        for volume_title in volume_titles:
-            years.append(year_pattern.search(volume_title.text).group())
-    
-
-    return years
-
-def pagination_search(page, selector='.pagination-pages-label'):
-
-    last_page_num_str = page.find(selector, first=True).text[-1]
-    return int(last_page_num_str)
+    return output_dict
