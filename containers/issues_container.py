@@ -11,15 +11,19 @@ class IssuesContainer(object):
         self.issues_info_layer = {}
         self.year_id = 1
 
-        for self.issue_year in issues_dict.keys():
+        for self.issue_year in issues_dict:
             self.years_layer[f'{self.year_id}'] = self.issue_year  # 1 уровень
             self.issue_id = 1
+            
             for self.issue_info in issues_dict[f'{self.issue_year}']: 
+                
                 self.issues_info_layer[
                     f'{self.year_id}.{self.issue_id}'] = self.issue_info  # 2 уровень
                 self.issue_id += 1
-            self.year_id += 1
+                
 
+            self.year_id += 1
+        #print(self.issues_info_layer)
         self.reset_statement()
 
     def __iter__(self):
@@ -39,9 +43,9 @@ class IssuesContainer(object):
         self.output = self.issues_info_layer[f'{self.year_id}.{self.issue_id}'].copy()
         self.output['year'] = self.years_layer[f'{self.year_id}']
 
-        if self.issues_info_layer.get(self.issue_id+1, False):
+        if self.issues_info_layer.get(f'{self.year_id}.{self.issue_id+1}', False):
             self.issue_id += 1
-        elif self.years_layer.get(self.year_id+1, False):
+        elif self.years_layer.get(f'{self.year_id+1}', False):
             self.year_id += 1
             self.issue_id = 1
         else:
@@ -75,3 +79,22 @@ class IssuesContainer(object):
         self.statement_issue_id = self.issue_id
         with open(file_path, 'wb') as file:
             pickle.dump(self, file)
+
+    def print_all(self):
+        
+        for self.year_current_id in self.years_layer:
+           
+            self.current_name = self.years_layer[self.year_current_id]  # Текущее название
+            print(f'{self.year_current_id}: {self.current_name}')  # Вывод на экран
+            self.issues_current_id = 1
+
+            while self.issues_info_layer.get(
+                    f'{self.year_current_id}.{self.issues_current_id}',
+                    False):  # Цикл до тех пор пока существует элемент с таким ID
+                self.current_id_str = f'{self.year_current_id}.{self.issues_current_id}'
+                self.current_name = self.issues_info_layer[self.current_id_str]
+                print(f'{" "*4}{self.current_id_str}: {self.current_name}')
+                self.issues_current_id += 1
+                
+
+

@@ -49,12 +49,12 @@ def issues_dict(url, session) -> dict:
     journal_page = request.html
     issn = get_issn(journal_page)
     volume_years = get_volumes_year(journal_page, absolute_url, session)
-
     output_dict = {}
     for volume_year in volume_years:
         output_dict[f'{volume_year}'] = get_issue_info(issn,
                                                        volume_year,
                                                        session)
+
     return output_dict
 
 

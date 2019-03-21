@@ -32,7 +32,6 @@ def main():
         time.sleep(1)
         print(f"{subdomain}")
         for journal in journals:
-            #print(journal)
             issues_info = issues_dict(journal['url'], session)
             issues = containers.IssuesContainer(issues_info)
             print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}')
@@ -41,10 +40,10 @@ def main():
                 articles = containers.SimpleContainer(article_titles)
                 print(f'{" "*8}{issue}')
                 for article in articles:
-                    article_info = article_info_dict(article['url'], session)                   
+                    article_info = article_info_dict(article['url'], session)
                     article_output = {'article_name': article['name']}
-                    article_output.update(article_info)                    
-                    print(f'{" "*12}{article_output}')                 
+                    article_output.update(article_info)
+                    print(f'{" "*12}{article_output}')
                     time.sleep(1)
 
 

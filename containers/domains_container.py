@@ -29,14 +29,14 @@ class DomainsContainer(object):
         self.domain_level = {}
         self.subdomain_level = {}
 
-        for self.primary_domain_name in general_domain_dict.keys():
+        for self.primary_domain_name in general_domain_dict:
             self.primary_domain_level[
                 f'{self.primary_domain_id}'] = self.primary_domain_name
             self.domain_id = 1
 
             self.primary_domain_dict = general_domain_dict[self.primary_domain_name]
 
-            for self.domain_name in self.primary_domain_dict.keys():
+            for self.domain_name in self.primary_domain_dict:
                 self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'] = self.domain_name
                 self.subdomain_id = 1
                 self.domain_list = self.primary_domain_dict[self.domain_name]
