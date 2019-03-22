@@ -87,7 +87,7 @@ def article_info_dict(url, session) -> dict:
     absolute_url = f'{BASE_URL}{url}'
     request = session.get(absolute_url, headers=HEADERS)
     page = request.html
-  
+
     doi = page.find('a.doi', first=True).text
     selector = 'div.abstract.author'
     abstract_elements = page.find(selector)

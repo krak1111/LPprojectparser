@@ -7,7 +7,7 @@ import containers
 import settings
 from domains_parser import format_to_json, json_handling
 from parser import *
-from support_func import load
+from support_func import load, pretty_dict_print
 
 
 
@@ -34,16 +34,16 @@ def main():
         for journal in journals:
             issues_info = issues_dict(journal['url'], session)
             issues = containers.IssuesContainer(issues_info)
-            print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}')
+            print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}\n\n')
             for issue in issues:
                 article_titles = articles_list(journal['url'], issue['url'], session)
                 articles = containers.SimpleContainer(article_titles)
-                print(f'{" "*8}{issue}')
+                print(f'{" "*8}{issue}\n\n')
                 for article in articles:
                     article_info = article_info_dict(article['url'], session)
                     article_output = {'article_name': article['name']}
                     article_output.update(article_info)
-                    print(f'{" "*12}{article_output}')
+                    pretty_dict_print(indent=" "*12, ugly_dict=article_output)
                     time.sleep(1)
 
 
