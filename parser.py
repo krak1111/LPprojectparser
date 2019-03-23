@@ -1,6 +1,7 @@
 from secondary_functions import *
 from settings import HEADERS, BASE_URL
 
+
 def journal_names_list(url, session) -> list:
     """
     Эта функция парсит страницу сабдомейна
@@ -51,9 +52,7 @@ def issues_dict(url, session) -> dict:
     volume_years = get_volumes_year(journal_page, absolute_url, session)
     output_dict = {}
     for volume_year in volume_years:
-        output_dict[f'{volume_year}'] = get_issue_info(issn,
-                                                       volume_year,
-                                                       session)
+        output_dict[f'{volume_year}'] = get_issue_info(issn, volume_year, session)
 
     return output_dict
 
@@ -71,10 +70,12 @@ def articles_list(journal_url, issue_url, session) -> list:
     articles = page.find(selector)  # Получает список экземпляров класса Elemen, удовлетворяющие поиску
 
     for article in articles:
+        article_type = article.find('span.js-article-subtype', first=True)
         if article.find('span.js-article-subtype'):  # если присутствует характер статьи, значит это статья)
-            article_element = article.find('a.article-content-title', first=True)
-            output_list.append({'name': article_element.text,
-                                'url': article_element.links.pop()})
+            if article_type.text != 'Erratum':
+                article_element = article.find('a.article-content-title', first=True)
+                output_list.append({'name': article_element.text,
+                                    'url': article_element.links.pop()})
 
     return output_list
 
@@ -95,10 +96,11 @@ def article_info_dict(url, session) -> dict:
         abstract = ''
         for abstract_element in abstract_elements:
             abstract += abstract_element.text
+        abstract.replace('\n', '')
     else:
         abstract = None
 
-    output_dict = {'doi': doi, 'abstract': abstract.replace('\n', '')}
+    output_dict = {'doi': doi, 'abstract': abstract}
 
 
     return output_dict

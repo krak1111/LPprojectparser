@@ -29,7 +29,7 @@ def main():
         journal_names = journal_names_list(subdomain['url'], session)
         journals = containers.SimpleContainer(journal_names)
         #print(subdomain)
-        time.sleep(1)
+        #time.sleep(1)
         print(f"{subdomain}")
         for journal in journals:
             issues_info = issues_dict(journal['url'], session)
@@ -44,7 +44,7 @@ def main():
                     article_output = {'article_name': article['name']}
                     article_output.update(article_info)
                     pretty_dict_print(indent=" "*12, ugly_dict=article_output)
-                    time.sleep(1)
+                    #time.sleep(1)
 
 
 
