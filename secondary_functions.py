@@ -3,18 +3,20 @@ import re
 import time
 
 from settings import HEADERS, BASE_URL
+from connection import get_request
 """
 Здесь вспомогательные функции, которые используются основными функциями парсера
 """
 
-def get_issue_info(issn, year, session) -> list:
+def get_issue_info(issn, year) -> list:
     """
     Функция делает запрос по году выпуска и получает json
     с информацией по выпускам этого года
     """
-    year_url = f'{BASE_URL}/journal/{issn}/year/{year}/issues'
+    absolute_url = f'{BASE_URL}/journal/{issn}/year/{year}/issues'
 
-    request = session.get(year_url, headers=HEADERS)  # reply will be a JSON object
+    request = get_request(url=absolute_url,
+                          headers=HEADERS)  # reply will be a JSON object
 
     volume_json = request.text  # get json format text
 
@@ -40,7 +42,7 @@ def get_issn(page) -> str:
     issn = issn_text.replace('-', '')
     return issn
 
-def get_volumes_year(journal_page, url, session) -> list:
+def get_volumes_year(journal_page, url) -> list:
     """
     Выдает список годов, когда были выпуски
     """
@@ -58,8 +60,9 @@ def get_volumes_year(journal_page, url, session) -> list:
         years.append(year_pattern.search(volume_title.text).group())
 
     for page_num in range(2, last_page_num + 1):
-        time.sleep(1)  # временное решение, что бы не получить бан
-        journal_page = session.get(url=f'{url}?page={page_num}', headers=HEADERS).html
+        absolute_url = f'{url}?page={page_num}'
+        journal_page = get_request(url=absolute_url,
+                                   headers=HEADERS)
         volume_titles = journal_page.find(selector)
 
         for volume_title in volume_titles:

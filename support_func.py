@@ -39,3 +39,33 @@ def pretty_dict_print(indent, ugly_dict):
         print(f'{indent}{key}:  {ugly_dict[key]}')
 
     print('\n')
+
+def write_info(subdomain, journal, file):
+    lbrace = '{'    
+    file.write(f'{lbrace}"primary": "{subdomain["primary"]}",\n')
+    file.write(f'"domain": "{subdomain["domain"]}",\n')
+    file.write(f'"subdomain": "{subdomain["subdomain"]}",\n')
+    file.write(f'"journal name": "{journal["name"]}",\n')
+    file.write(f'"articles": [\n')
+    return True
+
+def write_article(issue, article, file):
+    lbrace = '{'
+    rbrace = '}'
+    ident = ' '*4
+    file.write(f'{ident}{lbrace}"article name": "{article["article_name"]}",\n')
+    file.write(f'{ident} "doi": "{article["doi"]}",\n')
+    file.write(f'{ident} "publication date": "{issue["date"]}",\n')
+    file.write(f'{ident} "abstract": "{article["abstract"]}"{rbrace}\n')
+    #file.write(f'{ident} "keywords": {article["keywords"]} {rbrace},')
+
+def write_end(file):
+    file.write(f"{' '*4}]\n")
+    file.write('}')
+
+def counter_deco(func):
+    def _counted(*largs, **kargs):
+        _counted.numerator += 1        
+        return func(*largs, **kargs)
+    _counted.numerator = 0
+    return _counted
