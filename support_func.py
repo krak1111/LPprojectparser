@@ -69,3 +69,27 @@ def counter_deco(func):
         return func(*largs, **kargs)
     _counted.numerator = 0
     return _counted
+
+
+def memorize(func):
+    def _l(*largs, **kargs):
+        _l.itemlist = func(*largs, **kargs)
+        return _l.itemlist
+    _l.itemlist = []
+    return _l
+
+@counter_deco
+def give_header():    
+    if give_header.numerator > 25:
+        give_header.numerator = 1
+    return init_headers.itemlist[give_header.numerator-1]
+
+
+@memorize
+def init_headers():
+    output_list = []
+    with open('headers', 'r') as file:
+        for line in file:
+            output_list.append({'user-agent': line.replace('\n', '')})
+
+    return output_list

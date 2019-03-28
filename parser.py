@@ -1,6 +1,6 @@
 import time
 
-from connection import get_request
+from connection import get_request, change_vpn
 import secondary_functions as sec
 from settings import HEADERS, BASE_URL
 
@@ -17,13 +17,10 @@ def journal_names_list(url) -> list:
     while current_page_count <= last_page_num:
 
         absolute_url = f'{BASE_URL}/browse/journals-and-books?page={current_page_count}&contentType=JL&subject={url}'
-        request = get_request(url=absolute_url,
-                              headers=HEADERS)
-
-        html = request.html
+        
         selector = 'a.js-publication-title'  # Journal title in a > span
 
-        journal_elements = html.find(selector)  # find all elements
+        (journal_elements, html) = sec.finder(absolute_url, selector)  # find all elements
 
         # parse titles
         for journal_element in journal_elements:
@@ -36,7 +33,7 @@ def journal_names_list(url) -> list:
             except AttributeError:  # if only one page we have not a pagination element
                 break        
         current_page_count += 1
-    print(output_list)
+    
     return output_list
 
 
@@ -46,8 +43,7 @@ def issues_dict(url) -> dict:
     возвращает словарь типа {'date': Дата выпуска, 'url': адресс выпуска}
     """
     absolute_url = f'{url}/issues'
-    request = get_request(url=absolute_url,
-                          headers=HEADERS)
+    request = get_request(url=absolute_url)
     journal_page = request.html
     issn = sec.get_issn(journal_page)
     volume_years = sec.get_volumes_year(journal_page, absolute_url)
@@ -65,15 +61,26 @@ def articles_list(journal_url, issue_url) -> list:
     """
     absolute_url = f'{journal_url}{issue_url}'
     output_list = []
-    request = get_request(url=absolute_url,                          
-                          headers=HEADERS)
+    request = get_request(url=absolute_url)
     page = request.html
     selector = 'dl.article-content'
-    articles = page.find(selector)  # Получает список экземпляров класса Elemen, удовлетворяющие поиску
+    articles = None
+    i = 0
+    while not articles:
+        request = get_request(url=absolute_url)
+        page = request.html
+        articles = page.find(selector) # Получает список экземпляров класса Element, удовлетворяющие поиску
+        if i > 1:
+            print('article problem')
+            change_vpn()
+        if i > 5:
+            break
+        i += 1
+
 
     for article in articles:
         article_type = article.find('span.js-article-subtype', first=True)
-        if article.find('span.js-article-subtype'):  # если присутствует характер статьи, значит это статья)
+        if article_type:  # если присутствует характер статьи, значит это статья)
             if article_type.text != 'Erratum':
                 article_element = article.find('a.article-content-title', first=True)
                 output_list.append({'name': article_element.text,
@@ -88,22 +95,28 @@ def article_info_dict(url) -> dict:
     {'type':'', 'doi': '', 'abstract':}
     """
     absolute_url = f'{BASE_URL}{url}'
-    request = get_request(url=absolute_url,
-                          headers=HEADERS)
-    page = request.html
-
-    doi = page.find('a.doi', first=True).text
-    selector = 'div.abstract.author'
+    selector = 'a.doi'
+    (doi,page) = sec.finder(absolute_url, selector, first=True)
+    doi = doi.text
+    selector = 'div.abstract.author>div>p'
     abstract_elements = page.find(selector)
     if abstract_elements:
         abstract = ''
-        for abstract_element in abstract_elements:
+        for abstract_element in abstract_elements:            
             abstract += abstract_element.text.replace('\n', ' ')
         abstract.replace('\n', ' ')
     else:
         abstract = None
-
-    output_dict = {'doi': doi, 'abstract': abstract}
+    selector = 'div.keyword'
+    keyword_elements = page.find(selector)
+    if keyword_elements:
+        keywords = []
+        for keyword_element in keyword_elements:            
+            keywords.append(keyword_element.text.replace('\n', ' '))
+        
+    else:
+        keywords = None
+    output_dict = {'doi': doi, 'abstract': abstract, 'keywords': keywords}
 
 
     return output_dict

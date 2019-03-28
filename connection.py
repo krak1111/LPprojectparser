@@ -6,13 +6,12 @@ from requests.exceptions import ConnectionError
 import requests_html as rh
 from expressvpn import wrapper
 
-
-from support_func import counter_deco
-from settings import HEADERS
+import support_func as support
 
 VPN_STATUS = 'expressvpn status'
 VPN_LIST = 'expressvpn list all'
 
+@support.memorize
 def get_recommend_vpn_list():
     """
     Получение списка alias серверов,
@@ -24,9 +23,10 @@ def get_recommend_vpn_list():
         vpn_item_list = vpn_item.split()
         if vpn_item_list[-1] == 'Y':
             vpn_output.append(vpn_item_list[0])
-
     return vpn_output
 
+
+@support.memorize
 def get_all_vpn_list():
     """
     Получение списка alias всех серверов,
@@ -37,25 +37,26 @@ def get_all_vpn_list():
         vpn_item_list = vpn_item.split()
         vpn_output.append(vpn_item_list[0])
 
+
     return vpn_output
 
-@counter_deco
-def get_request(url, headers):
+@support.counter_deco
+def get_request(url):
     """
     Формирование запроса на sciencedirect
     """
     max_attemps = 10
     attemp = 1
-    # Допускается с одноко vpn 200 запросов подряд
-    if get_request.numerator >= 200:
-        change_vpn(recommend=False)
+    # Допускается с одноко vpn 400 запросов подряд
+    if get_request.numerator >= 400:
+        change_vpn()
         get_request.numerator = 0
         print('Changed')
     session = rh.HTMLSession()
     # попытка соединится с сервером
     while True:
         try:
-            request = session.get(url, headers=headers)
+            request = session.get(url, headers=support.give_header())
             text = request.html.text
             if 'There was a problem providing the content you requested' in text:
                 print('Banned')
@@ -63,6 +64,7 @@ def get_request(url, headers):
                 if attemp >= max_attemps:
                     raise ConnectionError
                 attemp += 1
+                session = rh.HTMLSession()
                 continue
             break
         except ConnectionError:  # ветка, если нет соединения
@@ -70,6 +72,7 @@ def get_request(url, headers):
             change_vpn()
             if attemp >= max_attemps:
                 raise ConnectionError
+            session = rh.HTMLSession()
             attemp += 1
 
     return request
@@ -83,20 +86,34 @@ def is_connected():
         return False
     return True
 
-def change_vpn(recommend=True):
+def change_vpn():
     """
     Смена vpn сервера, если входного параметра нет,
     то сервер выбирается из числа рекомендованных.
     Сервер из списка выбирается случайным образом.
     """
-    wrapper.disconnect()
-    if recommend:
-        vpn_list = get_recommend_vpn_list()
-    else:
-        vpn_list = get_all_vpn_list()
-    choosen_vpn = choice(vpn_list)
-    wrapper.connect_alias(choosen_vpn)
+    print('Changing VPN, relax please')
+    wrapper.disconnect()    
+    vpn_server = next_vpn_server()
+    wrapper.connect_alias(vpn_server)
     return True
+
+@support.counter_deco
+def next_vpn_server():
+    """
+    Выбор следующего vpn сервера,
+    если указан флак True, ты сервер выбирается следующим в списке рекомендованных,
+    в противном случае из списка всех серверов
+    """
+
+    if next_vpn_server.numerator > len(get_recommend_vpn_list.itemlist):
+        if next_vpn_server.numerator > len(get_all_vpn_list.itemlist):
+            next_vpn_server.numerator = 1
+            return get_recommend_vpn_list.itemlist[next_vpn_server.numerator-1]
+        else:
+            return get_all_vpn_list.itemlist[next_vpn_server.numerator-1]
+    else:    
+        return get_recommend_vpn_list.itemlist[next_vpn_server.numerator-1]
 
 
 

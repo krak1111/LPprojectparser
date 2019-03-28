@@ -10,7 +10,7 @@ import settings
 from domains_parser import format_to_json, json_handling
 import parser
 import support_func as support
-
+from connection import get_recommend_vpn_list, get_all_vpn_list
 
 
 def journal_runner(journal, issues, file):
@@ -49,12 +49,14 @@ def main():
     # articles_flag = True
     # if not subdomains:
     subdomains = containers.DomainsContainer(domain_dict)
+    # Иницилизация vpn
+    get_recommend_vpn_list()
+    get_all_vpn_list()
 
 
     for subdomain in subdomains:  # проход по сабдомейнам
         journal_names = parser.journal_names_list(subdomain['url'])
         journals = containers.SimpleContainer(journal_names)
-        #print(subdomain)
         print(f"{subdomain}")
         for journal in journals:
             issues_info = parser.issues_dict(journal['url'])
@@ -71,4 +73,5 @@ def main():
 
 
 if __name__ == '__main__':
+    support.init_headers()
     main()

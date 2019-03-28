@@ -3,7 +3,7 @@ import re
 import time
 
 from settings import HEADERS, BASE_URL
-from connection import get_request
+from connection import get_request, change_vpn
 """
 Здесь вспомогательные функции, которые используются основными функциями парсера
 """
@@ -15,8 +15,7 @@ def get_issue_info(issn, year) -> list:
     """
     absolute_url = f'{BASE_URL}/journal/{issn}/year/{year}/issues'
 
-    request = get_request(url=absolute_url,
-                          headers=HEADERS)  # reply will be a JSON object
+    request = get_request(url=absolute_url)  # reply will be a JSON object
 
     volume_json = request.text  # get json format text
 
@@ -61,9 +60,7 @@ def get_volumes_year(journal_page, url) -> list:
 
     for page_num in range(2, last_page_num + 1):
         absolute_url = f'{url}?page={page_num}'
-        journal_page = get_request(url=absolute_url,
-                                   headers=HEADERS)
-        volume_titles = journal_page.find(selector)
+        (volume_titles, _) = finder(absolute_url, selector)
 
         for volume_title in volume_titles:
             years.append(year_pattern.search(volume_title.text).group())
@@ -76,3 +73,22 @@ def pagination_search(page, selector='.pagination-pages-label'):
     """
     last_page_num_str = page.find(selector, first=True).text[-1]
     return int(last_page_num_str)
+
+def finder(url, selector, first=False):
+    """
+    Выводит кортеж из искомого элента/ов и страницу
+    При отстутсвии делает еще запрос и так 6 раз,
+    2 и 5 раз меняет VPN
+    """
+    i = 0
+    while i <= 6:
+        request = get_request(url)
+        html = request.html
+        output_elements = html.find(selector, first=first)
+        if output_elements:
+            return (output_elements, html)
+        print(f'selector {selector} problems')
+        if i%3 == 2:
+            change_vpn()
+        i += 1
+    print(f'{html}')
