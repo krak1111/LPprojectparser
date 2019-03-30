@@ -2,7 +2,7 @@ import time
 
 from connection import get_request, change_vpn
 import secondary_functions as sec
-from settings import HEADERS, BASE_URL
+from settings import BASE_URL
 
 
 def journal_names_list(url) -> list:
@@ -15,9 +15,7 @@ def journal_names_list(url) -> list:
     output_list = []
 
     while current_page_count <= last_page_num:
-
-        absolute_url = f'{BASE_URL}/browse/journals-and-books?page={current_page_count}&contentType=JL&subject={url}'
-        
+        absolute_url = f'{BASE_URL}/browse/journals-and-books?page={current_page_count}&contentType=JL&accessType=openAccess&accessType=containsOpenAccess&subject={url}'
         selector = 'a.js-publication-title'  # Journal title in a > span
 
         (journal_elements, html) = sec.finder(absolute_url, selector)  # find all elements
@@ -31,9 +29,9 @@ def journal_names_list(url) -> list:
             try:
                 last_page_num = sec.pagination_search(html)
             except AttributeError:  # if only one page we have not a pagination element
-                break        
+                break
         current_page_count += 1
-    
+
     return output_list
 
 
@@ -49,7 +47,10 @@ def issues_dict(url) -> dict:
     volume_years = sec.get_volumes_year(journal_page, absolute_url)
     output_dict = {}
     for volume_year in volume_years:
-        output_dict[f'{volume_year}'] = sec.get_issue_info(issn, volume_year)
+        if int(volume_year) >= 2010:
+            output_dict[f'{volume_year}'] = sec.get_issue_info(issn, volume_year)
+        else:
+            break
         #time.sleep(0.5)
     return output_dict
 
@@ -95,25 +96,29 @@ def article_info_dict(url) -> dict:
     {'type':'', 'doi': '', 'abstract':}
     """
     absolute_url = f'{BASE_URL}{url}'
+
     selector = 'a.doi'
-    (doi,page) = sec.finder(absolute_url, selector, first=True)
+    (doi, page) = sec.finder(absolute_url, selector, first=True)
     doi = doi.text
+
     selector = 'div.abstract.author>div>p'
     abstract_elements = page.find(selector)
     if abstract_elements:
         abstract = ''
-        for abstract_element in abstract_elements:            
+        for abstract_element in abstract_elements:
             abstract += abstract_element.text.replace('\n', ' ')
         abstract.replace('\n', ' ')
+        abstract.replace('"', "'")
     else:
-        abstract = None
+        return None
+
     selector = 'div.keyword'
     keyword_elements = page.find(selector)
     if keyword_elements:
         keywords = []
-        for keyword_element in keyword_elements:            
+        for keyword_element in keyword_elements:
             keywords.append(keyword_element.text.replace('\n', ' '))
-        
+
     else:
         keywords = None
     output_dict = {'doi': doi, 'abstract': abstract, 'keywords': keywords}

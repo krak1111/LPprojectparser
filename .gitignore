@@ -3,6 +3,7 @@ test.py
 *.csv
 *.json
 container
+correct_json.py
 test2.py
 parser.sublime-project
 parser.sublime-workspace

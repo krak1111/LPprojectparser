@@ -2,15 +2,13 @@ import json
 import os
 import time
 
-import requests_html as rh
-
-
+from connection import get_recommend_vpn_list, get_all_vpn_list
 import containers
 import settings
 from domains_parser import format_to_json, json_handling
 import parser
 import support_func as support
-from connection import get_recommend_vpn_list, get_all_vpn_list
+
 
 
 def journal_runner(journal, issues, file):
@@ -24,6 +22,8 @@ def journal_runner(journal, issues, file):
 
         for article in articles:  # проход по статьям выпуска
             article_info = parser.article_info_dict(article['url'])
+            if article_info is None:
+                continue
             article_output = {'article_name': article['name']}
             article_output.update(article_info)
             support.pretty_dict_print(indent=" "*12, ugly_dict=article_output)
@@ -38,7 +38,7 @@ def main():
     """
     Обработка json'а
     """
-    json_form = format_to_json(settings.file_path)
+    json_form = format_to_json(settings.FILE_PATH)
     json_loader = json.loads(json_form)
     domain_dict = json_handling(json_loader)
 
@@ -60,6 +60,8 @@ def main():
         print(f"{subdomain}")
         for journal in journals:
             issues_info = parser.issues_dict(journal['url'])
+            if issues_info == []:  # если нет выпусков позже 2009 года
+                continue
             issues = containers.IssuesContainer(issues_info)
             print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}\n\n')
             try:

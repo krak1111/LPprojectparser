@@ -1,9 +1,11 @@
 import pickle
-def output_form(subdomain, journal, issue, article, article_info) -> dict:
-    pass
+import json
 
 
 def load(subdomain='domain', journal='journal', issue='issue', article='article'):
+    """
+    Предполагалось сохранения состояния, это загрузчик
+    """
     try:
         with open(article, 'rb') as file:
             article_object = pickle.loads(file.read())
@@ -34,14 +36,15 @@ def pretty_dict_print(indent, ugly_dict):
     """
     Печатает в хорошем виде входящий словарь
     """
-
     for key in ugly_dict:
         print(f'{indent}{key}:  {ugly_dict[key]}')
-
     print('\n')
 
 def write_info(subdomain, journal, file):
-    lbrace = '{'    
+    """
+    Запись метаинформации о статье
+    """
+    lbrace = '{'
     file.write(f'{lbrace}"primary": "{subdomain["primary"]}",\n')
     file.write(f'"domain": "{subdomain["domain"]}",\n')
     file.write(f'"subdomain": "{subdomain["subdomain"]}",\n')
@@ -50,28 +53,41 @@ def write_info(subdomain, journal, file):
     return True
 
 def write_article(issue, article, file):
+    """
+    Запись статьи в JSON
+    """
     lbrace = '{'
     rbrace = '}'
     ident = ' '*4
     file.write(f'{ident}{lbrace}"article name": "{article["article_name"]}",\n')
     file.write(f'{ident} "doi": "{article["doi"]}",\n')
     file.write(f'{ident} "publication date": "{issue["date"]}",\n')
-    file.write(f'{ident} "abstract": "{article["abstract"]}"{rbrace}\n')
-    #file.write(f'{ident} "keywords": {article["keywords"]} {rbrace},')
+    file.write(f'{ident} "abstract": "{article["abstract"]}",\n')
+    keywords = json.dumps(article["keywords"])
+    file.write(f'{ident} "keywords": {keywords}{rbrace},\n')
 
 def write_end(file):
+    """
+    Конечная запись в JSON
+    """
     file.write(f"{' '*4}]\n")
     file.write('}')
 
 def counter_deco(func):
+    """
+    Счетчик вызовов функций
+    """
     def _counted(*largs, **kargs):
-        _counted.numerator += 1        
+        _counted.numerator += 1
         return func(*largs, **kargs)
     _counted.numerator = 0
     return _counted
 
 
 def memorize(func):
+    """
+    Хранилище списка вывода функции для удобного обращения к нему
+    """
     def _l(*largs, **kargs):
         _l.itemlist = func(*largs, **kargs)
         return _l.itemlist

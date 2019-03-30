@@ -1,6 +1,4 @@
-from random import choice
-import subprocess
-import time
+from random import shuffle
 
 from requests.exceptions import ConnectionError
 import requests_html as rh
@@ -19,10 +17,11 @@ def get_recommend_vpn_list():
     """
     vpn_list = wrapper.run_command(VPN_LIST)
     vpn_output = []
-    for vpn_item in vpn_list[2:]:
+    for vpn_item in vpn_list[3:]:
         vpn_item_list = vpn_item.split()
         if vpn_item_list[-1] == 'Y':
             vpn_output.append(vpn_item_list[0])
+    shuffle(vpn_output)
     return vpn_output
 
 
@@ -33,11 +32,10 @@ def get_all_vpn_list():
     """
     vpn_list = wrapper.run_command(VPN_LIST)
     vpn_output = []
-    for vpn_item in vpn_list[2:]:
+    for vpn_item in vpn_list[2:]:  # Первые две строки служебные
         vpn_item_list = vpn_item.split()
         vpn_output.append(vpn_item_list[0])
-
-
+    shuffle(vpn_output)
     return vpn_output
 
 @support.counter_deco
@@ -93,7 +91,7 @@ def change_vpn():
     Сервер из списка выбирается случайным образом.
     """
     print('Changing VPN, relax please')
-    wrapper.disconnect()    
+    wrapper.disconnect()
     vpn_server = next_vpn_server()
     wrapper.connect_alias(vpn_server)
     return True
@@ -105,19 +103,16 @@ def next_vpn_server():
     если указан флак True, ты сервер выбирается следующим в списке рекомендованных,
     в противном случае из списка всех серверов
     """
-
     if next_vpn_server.numerator > len(get_recommend_vpn_list.itemlist):
         if next_vpn_server.numerator > len(get_all_vpn_list.itemlist):
             next_vpn_server.numerator = 1
-            return get_recommend_vpn_list.itemlist[next_vpn_server.numerator-1]
-        else:
-            return get_all_vpn_list.itemlist[next_vpn_server.numerator-1]
-    else:    
-        return get_recommend_vpn_list.itemlist[next_vpn_server.numerator-1]
+            return get_recommend_vpn_list.itemlist[0]
+        return get_all_vpn_list.itemlist[next_vpn_server.numerator-1]
+    return get_recommend_vpn_list.itemlist[next_vpn_server.numerator-1]
 
 
 
-if __name__ == '__main__':    
+if __name__ == '__main__':
     # print('Reccomend servers\n', get_recommend_vpn_list(), '\n\n')
     # print('All servers\n', get_all_vpn_list())
     change_vpn()

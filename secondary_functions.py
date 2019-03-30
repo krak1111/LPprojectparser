@@ -1,8 +1,7 @@
 import json
 import re
-import time
 
-from settings import HEADERS, BASE_URL
+from settings import BASE_URL, DATE_DICT
 from connection import get_request, change_vpn
 """
 Здесь вспомогательные функции, которые используются основными функциями парсера
@@ -24,7 +23,7 @@ def get_issue_info(issn, year) -> list:
     issue_data = []
 
     for data in json_object["data"]:
-        issue_data.append({'date': data["coverDateText"],
+        issue_data.append({'date': to_date_format(data["coverDateText"]),
                            'url': data["uriLookup"]})
 
 
@@ -69,7 +68,7 @@ def get_volumes_year(journal_page, url) -> list:
 def pagination_search(page, selector='.pagination-pages-label'):
     """
     Обработка пагинации и возвращает сколько страниц
-    в пагинации
+    в поисковом запросе
     """
     last_page_num_str = page.find(selector, first=True).text[-1]
     return int(last_page_num_str)
@@ -92,3 +91,21 @@ def finder(url, selector, first=False):
             change_vpn()
         i += 1
     print(f'{html}')
+
+
+def to_date_format(date):
+    """
+    Функция переводит дату в форматЖ Month_ID-Year
+    из форматов Date Month Year, Year, Season Year
+    """
+    month_pattern = re.compile(r"([A-Za-z]+) $")
+
+    year = date[-4:]
+    
+    month_group = month_pattern.findall(date[:-4])
+    if month_group:
+        month = DATE_DICT[month_group[0]]
+
+        return f'{month}-{year}'
+    else:
+        return f'01-{year}'
