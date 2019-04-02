@@ -1,4 +1,7 @@
-import pickle
+import json
+import os
+
+
 class DomainsContainer(object):
     """
     Трехуровневый контейнер для хранения данных о разделах
@@ -12,14 +15,14 @@ class DomainsContainer(object):
     Вид входимого словаря:
     {'primary name 1':{
         'domain name 1.1':[
-            {'name': 'subdomain name 1.1.1', 'url'}
+            {'name': 'subdomain name 1.1.1', 'url': 'subdomain url'}
         ]
         }
     }
     Каждый из этих уровней представлен в виде словаря:
         1. {'ID': 'Name of primary domain'}, где ID - числа начиная с 1
         2. {'ID': 'Name of domain'}, где ID представляют собой форму ID_primary.ID_domain(внутри основного раздела)
-        3. {'ID': ('Name of subdomain', 'url of subdomain')}, где ID редставляют собой форму
+        3. {'ID': {'name': Name of subdomain', 'url': 'url of subdomain'}}, где ID редставляют собой форму
                                                               ID_primary.ID_domain(внутри основного раздела).ID_subdomain(внутри раздела)
 
     """
@@ -50,8 +53,10 @@ class DomainsContainer(object):
                 self.domain_id += 1
 
             self.primary_domain_id += 1
-        self.reset_statement()
-
+        self.primary_domain_id = 1
+        self.domain_id = 1
+        self.subdomain_id = 1
+        self.save_statement()
 
     def print_all(self):
         """
@@ -99,9 +104,9 @@ class DomainsContainer(object):
         """
         Класс с сохранением состояния
         """
-        self.primary_domain_id = self.statement_primary_domain_id
-        self.domain_id = self.statement_domain_id
-        self.subdomain_id = self.statement_subdomain_id    
+        self.primary_domain_id = 1
+        self.domain_id = 1
+        self.subdomain_id = 1
         self.flag_stop_iteration = False
         return self
 
@@ -117,7 +122,7 @@ class DomainsContainer(object):
             self.reset_statement()
             raise StopIteration
 
-        
+        self.save_statement()
         self.output = {'primary': self.primary_domain_level[f'{self.primary_domain_id}'],
                        'domain': self.domain_level[f'{self.primary_domain_id}.{self.domain_id}'],
                        'subdomain': self.subdomain_level[f'{self.primary_domain_id}.{self.domain_id}.{self.subdomain_id}']['name'],
@@ -149,47 +154,42 @@ class DomainsContainer(object):
 
     def save_statement(self):
         """
-        Состояние храница в виде id текущеко элемента
+        Сохранение оставшихся сабдомейнов в файл
         """
-        self.statement_primary_domain_id = self.primary_domain_id
-        self.statement_domain_id = self.domain_id
-        self.statement_subdomain_id = self.subdomain_id
+        self.pid = self.primary_domain_id
+        self.did = self.domain_id
+        self.sid = self.subdomain_id
+        self.writen_dict = {}
 
-        return True
+        while self.primary_domain_level.get(f'{self.pid}', False):
+            self.primary_dict = {}
+            while self.domain_level.get(f'{self.pid}.{self.did}', False):
+                self.domain_list = []
+                while self.subdomain_level.get(f'{self.pid}.{self.did}.{self.sid}'):
+                    self.domain_list.append(self.subdomain_level[f'{self.pid}.{self.did}.{self.sid}'])
+                    self.sid += 1
+                self.primary_dict[self.domain_level[f'{self.pid}.{self.did}']] = self.domain_list
+                self.did += 1
+                self.sid = 1
+            self.writen_dict[self.primary_domain_level[f'{self.pid}']] = self.primary_dict
+            self.did = 1
+            self.sid = 1
+            self.pid += 1
+        self.dumpen_dict = json.dumps(self.writen_dict)
+        with open("statement/subdomains", 'w', encoding='utf-8') as file:
+            file.write(self.dumpen_dict)
 
 
     def reset_statement(self):
-        """
-        Сброс всех индетификаторов в 1
-        """
-        self.statement_primary_domain_id = 1
-        self.statement_domain_id = 1
-        self.statement_subdomain_id = 1
-        self.primary_domain_id = 1
-        self.domain_id = 1
-        self.subdomain_id = 1
-
-        return True
-
+        os.remove("statement/subdomains")
 
     def current_subdomain(self):
         """
         Возвращает текущий элемент
         """
-        self.output = {'primary': self.primary_domain_level[f'{self.statement_primary_domain_id}'],
-                       'domain': self.domain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}'],
-                       'subdomain': self.subdomain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}.{self.statement_subdomain_id}']['name'],
-                       'url': self.subdomain_level[f'{self.statement_primary_domain_id}.{self.statement_domain_id}.{self.statement_subdomain_id}']['url']}
-        
+
+        self.output = {'primary': self.primary_domain_level.get(f'{self.primary_domain_id-1}', self.primary_domain_level['1']),
+                       'domain': self.domain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}', self.domain_level['1.1']),
+                       'subdomain': self.subdomain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}.{self.subdomain_id-1}',self.subdomain_level['1.1.1'])['name'],
+                       'url': self.subdomain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}.{self.subdomain_id-1}',self.subdomain_level['1.1.1'])['url']}
         return self.output
-
-
-    def save(self, file_path='domain'):
-        """
-        серилизация и сохранение объекта
-        """
-        self.statement_primary_domain_id = self.primary_domain_id
-        self.statement_domain_id = self.domain_id
-        self.statement_subdomain_id = self.subdomain_id
-        with open(file_path, 'wb') as file:
-            pickle.dump(self, file)

@@ -1,35 +1,8 @@
-import pickle
 import json
 
 
-def load(subdomain='domain', journal='journal', issue='issue', article='article'):
-    """
-    Предполагалось сохранения состояния, это загрузчик
-    """
-    try:
-        with open(article, 'rb') as file:
-            article_object = pickle.loads(file.read())
-    except FileNotFoundError:
-        return (None, None, None, None)
-
-    try:
-        with open(issue, 'rb') as file:
-            issue_object = pickle.loads(file.read())
-    except FileNotFoundError:
-        return (article_object, None, None, None)
-
-    try:
-        with open(journal, 'rb') as file:
-            journal_object = pickle.loads(file.read())
-    except FileNotFoundError:
-        return (article_object, issue_object, None, None)
-
-    try:
-        with open(subdomain, 'rb') as file:
-            subdomain_object = pickle.loads(file.read())
-            return (article_object, issue_object, journal_object, subdomain_object)
-    except FileNotFoundError:
-        return (article_object, issue_object, journal_object, None)
+def load():
+    pass
 
 
 def pretty_dict_print(indent, ugly_dict):
@@ -38,6 +11,8 @@ def pretty_dict_print(indent, ugly_dict):
     """
     for key in ugly_dict:
         print(f'{indent}{key}:  {ugly_dict[key]}')
+        if key == 'doi':
+            break
     print('\n')
 
 def write_info(subdomain, journal, file):
@@ -48,23 +23,31 @@ def write_info(subdomain, journal, file):
     file.write(f'{lbrace}"primary": "{subdomain["primary"]}",\n')
     file.write(f'"domain": "{subdomain["domain"]}",\n')
     file.write(f'"subdomain": "{subdomain["subdomain"]}",\n')
-    file.write(f'"journal name": "{journal["name"]}",\n')
+    file.write(f'"journal name": {json.dumps(journal["name"])},\n')
     file.write(f'"articles": [\n')
+    file.flush()
     return True
 
-def write_article(issue, article, file):
+def write_article(issue, article, file, last=False):
     """
     Запись статьи в JSON
     """
     lbrace = '{'
     rbrace = '}'
     ident = ' '*4
-    file.write(f'{ident}{lbrace}"article name": "{article["article_name"]}",\n')
-    file.write(f'{ident} "doi": "{article["doi"]}",\n')
-    file.write(f'{ident} "publication date": "{issue["date"]}",\n')
-    file.write(f'{ident} "abstract": "{article["abstract"]}",\n')
+
+    file.write(f'{ident}{lbrace}"article name": {json.dumps(article["article_name"])},\n')
+    file.write(f'{ident} "doi": {json.dumps(article["doi"])},\n')
+    file.write(f'{ident} "publication date": {json.dumps(issue["date"])},\n')
+    file.write(f'{ident} "abstract": {json.dumps(article["abstract"])},\n')
     keywords = json.dumps(article["keywords"])
-    file.write(f'{ident} "keywords": {keywords}{rbrace},\n')
+    if last:
+        end = '\n'
+    else:
+        end = ',\n'
+    file.write(f'{ident} "keywords": {keywords}{rbrace}{end}')
+    file.flush()
+    print('Записано')
 
 def write_end(file):
     """
@@ -109,3 +92,4 @@ def init_headers():
             output_list.append({'user-agent': line.replace('\n', '')})
 
     return output_list
+

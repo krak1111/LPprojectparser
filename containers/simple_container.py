@@ -1,29 +1,41 @@
-import pickle
+import json
+import os
+
+
 class SimpleContainer(object):
 
-    def __init__(self, input_list):
+    def __init__(self, input_list, is_journals=False):
         self.storage_dict = {}
         self.current_id = 1
-        
+        self.is_journals = is_journals
         for entity in input_list:
             self.single_entity_dict = {'name': entity['name'], 'url': entity['url']}
             self.storage_dict[self.current_id] = self.single_entity_dict
             del self.single_entity_dict 
             self.current_id += 1
-
-        self.reset_statement()
-
-    def reset_statement(self):
+        if self.is_journals:
+            self.f_name = 'journals'
+        else:
+            self.f_name = 'articles'
         self.current_id = 1
-        self.statement_current_id = 1
-        return True
+        self.save_statement()
+
 
     def save_statement(self):
-        self.statement_current_id = self.current_id
-        return True
+        self.writen_list = []
+        self.id = self.current_id
+        while self.storage_dict.get(self.id, False):
+            self.writen_list.append(self.storage_dict[self.id])
+            self.id += 1
+        with open(f'statement/{self.f_name}', 'w') as file:
+            file.write(json.dumps(self.writen_list))
+
+    def reset_statement(self):
+        os.remove(f"statement/{self.f_name}")
+
 
     def __iter__(self):
-        self.current_id_id = self.statement_current_id
+        self.current_id = 1
         self.flag_stop_iteration = False
         return self
 
@@ -42,14 +54,6 @@ class SimpleContainer(object):
 
         return self.output
 
-    def current(self):
-        self.output = self.storage_dict[self.statement_current_id]
-        return self.output
 
-    def save(self, file_path):
-        """
-        серилизация и сохранение объекта
-        """
-        self.statement_current_id = self.current_id
-        with open(file_path, 'wb') as file:
-            pickle.dump(self, file)
+    def is_last(self):
+        return self.flag_stop_iteration

@@ -62,29 +62,15 @@ def articles_list(journal_url, issue_url) -> list:
     """
     absolute_url = f'{journal_url}{issue_url}'
     output_list = []
-    request = get_request(url=absolute_url)
-    page = request.html
     selector = 'dl.article-content'
-    articles = None
-    i = 0
-    while not articles:
-        request = get_request(url=absolute_url)
-        page = request.html
-        articles = page.find(selector) # Получает список экземпляров класса Element, удовлетворяющие поиску
-        if i > 1:
-            print('article problem')
-            change_vpn()
-        if i > 5:
-            break
-        i += 1
-
+    (articles, _) = sec.finder(absolute_url, selector) # Получает список экземпляров класса Element, удовлетворяющие поиску
 
     for article in articles:
         article_type = article.find('span.js-article-subtype', first=True)
         if article_type:  # если присутствует характер статьи, значит это статья)
             if article_type.text != 'Erratum':
                 article_element = article.find('a.article-content-title', first=True)
-                output_list.append({'name': article_element.text,
+                output_list.append({'name': article_element.text.replace('\n', ''),
                                     'url': article_element.links.pop()})
 
     return output_list

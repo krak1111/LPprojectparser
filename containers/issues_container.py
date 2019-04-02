@@ -1,4 +1,6 @@
-import pickle
+import json
+import os
+
 class IssuesContainer(object):
     """
     Двухуровневый контейнер для хранения текущих выпусков
@@ -14,24 +16,23 @@ class IssuesContainer(object):
         for self.issue_year in issues_dict:
             self.years_layer[f'{self.year_id}'] = self.issue_year  # 1 уровень
             self.issue_id = 1
-            
-            for self.issue_info in issues_dict[f'{self.issue_year}']: 
-                
+
+            for self.issue_info in issues_dict[f'{self.issue_year}']:
                 self.issues_info_layer[
                     f'{self.year_id}.{self.issue_id}'] = self.issue_info  # 2 уровень
                 self.issue_id += 1
-                
 
             self.year_id += 1
-        #print(self.issues_info_layer)
-        self.reset_statement()
+        self.year_id = 1
+        self.issue_id = 1
+        self.save_statement()
 
     def __iter__(self):
         """
         При иницилизации итератора присваивается последнее сохраненное состояние
         """
-        self.year_id = self.statement_year_id
-        self.issue_id = self.statement_issue_id
+        self.year_id = 1
+        self.issue_id = 1
         self.flag_stop_iteration = False
         return self
 
@@ -55,30 +56,29 @@ class IssuesContainer(object):
 
     def reset_statement(self):
         """
-        Сброс состояния и итератора
+        Удаление файла с состоянием
         """
-        self.year_id = 1
-        self.issue_id = 1
-        self.statement_year_id = 1
-        self.statement_issue_id = 1
-        return True
+        os.remove("statement/issues")
 
     def save_statement(self):
         """
-        Сохранение состояние вызывается после сохранения данных после парсинга
+        Сохранение состояние в файл
         """
-        self.statement_year_id = self.year_id
-        self.statement_issue_id = self.issue_id
-        return True
+        self.yid = self.year_id
+        self.iid = self.issue_id
+        self.writen_dict = {}
+        while self.years_layer.get(f'{self.yid}', False):
+            self.year = self.years_layer[f'{self.yid}']
+            self.writen_list = []
+            while self.issues_info_layer.get(f'{self.yid}.{self.iid}', False):
+                self.writen_list.append(self.issues_info_layer[f'{self.yid}.{self.iid}'])
+                self.iid += 1
+            self.writen_dict[f'{self.year}'] = self.writen_list
+            self.yid += 1
+            self.iid = 1
 
-    def save(self, file_path='issue'):
-        """
-        серилизация и сохранение объекта
-        """
-        self.statement_year_id = self.year_id
-        self.statement_issue_id = self.issue_id
-        with open(file_path, 'wb') as file:
-            pickle.dump(self, file)
+        with open('statement/issues', 'w') as file:
+            file.write(json.dumps(self.writen_dict))
 
     def print_all(self):
         
@@ -95,6 +95,6 @@ class IssuesContainer(object):
                 self.current_name = self.issues_info_layer[self.current_id_str]
                 print(f'{" "*4}{self.current_id_str}: {self.current_name}')
                 self.issues_current_id += 1
-                
 
-
+    def is_last(self):
+        return self.flag_stop_iteration

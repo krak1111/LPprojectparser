@@ -6,10 +6,6 @@
                 "chemical-engineering": {
                     name: "Chemical Engineering",
                     tertiary: {
-                        bioengineering: {
-                            name: "Bioengineering",
-                            sid: 291808
-                        },
                         catalysis: {
                             name: "Catalysis",
                             sid: 291809
