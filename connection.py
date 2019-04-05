@@ -56,6 +56,7 @@ def get_request(url):
     while True:
         try:
             request = session.get(url, headers=support.give_header())
+            text = request.text
             if 'There was a problem providing the content you requested' in text:
                 print('Banned')
                 
