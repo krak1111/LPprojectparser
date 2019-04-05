@@ -2,6 +2,8 @@ test.py
 *.pyc
 *.csv
 *.json
+*.zip
+check_json.py
 container
 correct_json.py
 test2.py

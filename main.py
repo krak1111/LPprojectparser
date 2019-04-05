@@ -27,11 +27,17 @@ def journal_runner(journal, issues, file, load_status):
                 articles = containers.SimpleContainer(json.loads(content))
             except FileNotFoundError:
                 article_titles = parser.articles_list(journal['url'], issue['url'])
+                if not article_titles:
+                    issues.save_statement()
+                    continue
                 articles = containers.SimpleContainer(article_titles)
             finally:
                 load_status['articles'] = False
         else:
             article_titles = parser.articles_list(journal['url'], issue['url'])
+            if not article_titles:
+                issues.save_statement()
+                continue
             articles = containers.SimpleContainer(article_titles)
         print(f'{" "*8}{issue}\n\n')
 
@@ -94,6 +100,7 @@ def main():
             if detect[0].lang != 'en' or detect[0].prob < 0.85:
                 print('lang: ', detect)
                 print('Not English')  # пропускаем не английский журнал
+                journals.save_statement()
                 continue
             if load_status['issues']:
                 try:

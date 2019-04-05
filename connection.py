@@ -1,4 +1,5 @@
 from random import shuffle
+import time
 
 from requests.exceptions import ConnectionError
 import requests_html as rh
@@ -55,21 +56,26 @@ def get_request(url):
     while True:
         try:
             request = session.get(url, headers=support.give_header())
-            text = request.html.text
             if 'There was a problem providing the content you requested' in text:
                 print('Banned')
-                change_vpn()  # Ветка, если мы забанены
+                
                 if attemp >= max_attemps:
-                    raise ConnectionError
+                    time.sleep(10)
+                    next_vpn_server.numerator = 1
+                    attemp = 1
+                change_vpn()  # Ветка, если мы забанены
                 attemp += 1
                 session = rh.HTMLSession()
                 continue
             break
         except ConnectionError:  # ветка, если нет соединения
             print('Lose connection')
-            change_vpn()
+            
             if attemp >= max_attemps:
-                raise ConnectionError
+                time.sleep(10)
+                next_vpn_server.numerator = 1
+                attemp = 1
+            change_vpn()
             session = rh.HTMLSession()
             attemp += 1
 
