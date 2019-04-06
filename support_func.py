@@ -1,9 +1,17 @@
 import json
+from langdetect import detect_langs
+
+import secondary_functions as sfunc
 
 
-def load():
-    pass
-
+def is_not_english(journal):
+    selector = 'h3.text-m'
+    (element, _) = sfunc.finder(journal['url'], selector, first=True)
+    article_name = element.text
+    detect = detect_langs(article_name)
+    if detect[0] != 'en' and detect[1] < 0.85:
+        return True
+    return False
 
 def pretty_dict_print(indent, ugly_dict):
     """

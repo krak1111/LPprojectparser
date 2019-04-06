@@ -17,7 +17,6 @@ def journal_runner(journal, issues, file, load_status):
     """
     Проход по журналу и запись в json файл
     """
-
     for issue in issues:  # проход по выпускам журнала
         last = False
         if load_status['articles']:
@@ -96,12 +95,12 @@ def main():
         
 
         for journal in journals:
-            detect = detect_langs(journal['name'])
-            if detect[0].lang != 'en' or detect[0].prob < 0.85:
-                print('lang: ', detect)
+            
+            if support.is_not_english(journal):
                 print('Not English')  # пропускаем не английский журнал
                 journals.save_statement()
                 continue
+
             if load_status['issues']:
                 try:
                     with open('statement/issues', 'r') as file:
