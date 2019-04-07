@@ -1,14 +1,35 @@
 from random import shuffle
 import time
+import subprocess
 
 from requests.exceptions import ConnectionError
 import requests_html as rh
-from expressvpn import wrapper
 
 import support_func as support
 
 VPN_STATUS = 'expressvpn status'
 VPN_LIST = 'expressvpn list all'
+VPN_DISCONNECT = 'expressvpn disconnect'
+
+def run_command(command):
+    p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    return list([str(v).replace('\\t', ' ').replace('\\n', ' ').replace('b\'', '').replace('\'', '')
+                .replace('b"', '')
+                 for v in iter(p.stdout.readline, b'')])
+
+def connect_alias(alias):
+    """
+    Подключение к серверу
+    """
+    command = f'expressvpn connect {alias}'
+    t_output = run_command(command)
+
+    if 'We were unable to connect to this VPN location' in t_output:
+        raise ConnectionError
+    if 'not found' in t_output:
+        raise ConnectionError
+    print(f'Successfully connected to {alias}')
+
 
 @support.memorize
 def get_recommend_vpn_list():
@@ -16,7 +37,7 @@ def get_recommend_vpn_list():
     Получение списка alias серверов,
     рекомендованых expressvpn
     """
-    vpn_list = wrapper.run_command(VPN_LIST)
+    vpn_list = run_command(VPN_LIST)
     vpn_output = []
     for vpn_item in vpn_list[3:]:
         vpn_item_list = vpn_item.split()
@@ -31,7 +52,7 @@ def get_all_vpn_list():
     """
     Получение списка alias всех серверов,
     """
-    vpn_list = wrapper.run_command(VPN_LIST)
+    vpn_list = run_command(VPN_LIST)
     vpn_output = []
     for vpn_item in vpn_list[2:]:  # Первые две строки служебные
         vpn_item_list = vpn_item.split()
@@ -71,7 +92,6 @@ def get_request(url):
             break
         except ConnectionError:  # ветка, если нет соединения
             print('Lose connection')
-            
             if attemp >= max_attemps:
                 time.sleep(10)
                 next_vpn_server.numerator = 1
@@ -87,7 +107,7 @@ def is_connected():
     """
     Проверка, подключены ли мы к vpn
     """
-    if wrapper.run_command(VPN_STATUS) == ['Not connected ']:
+    if run_command(VPN_STATUS) == ['Not connected ']:
         return False
     return True
 
@@ -98,9 +118,9 @@ def change_vpn():
     Сервер из списка выбирается случайным образом.
     """
     print('Changing VPN, relax please')
-    wrapper.disconnect()
+    run_command(VPN_DISCONNECT)
     vpn_server = next_vpn_server()
-    wrapper.connect_alias(vpn_server)
+    connect_alias(vpn_server)
     return True
 
 @support.counter_deco

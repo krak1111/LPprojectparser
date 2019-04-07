@@ -44,7 +44,7 @@ class SimpleContainer(object):
         if self.flag_stop_iteration:
             self.reset_statement()
             raise StopIteration
-
+        self.save_statement()
         self.output = self.storage_dict[self.current_id]
 
         if self.storage_dict.get(self.current_id+1, False):

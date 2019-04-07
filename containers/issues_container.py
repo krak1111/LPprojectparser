@@ -40,7 +40,7 @@ class IssuesContainer(object):
         if self.flag_stop_iteration:  # Если дошли до конца
             self.reset_statement()
             raise StopIteration
-
+        self.save_statement()
         self.output = self.issues_info_layer[f'{self.year_id}.{self.issue_id}'].copy()
         self.output['year'] = self.years_layer[f'{self.year_id}']
 
@@ -98,3 +98,6 @@ class IssuesContainer(object):
 
     def is_last(self):
         return self.flag_stop_iteration
+
+    def current(self):
+        return self.output

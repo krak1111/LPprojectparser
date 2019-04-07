@@ -1,5 +1,7 @@
 import time
 
+from langdetect import detect_langs
+
 from connection import get_request, change_vpn
 import secondary_functions as sec
 from settings import BASE_URL
@@ -111,3 +113,16 @@ def article_info_dict(url) -> dict:
 
 
     return output_dict
+
+def is_not_english(journal):
+    """
+    Определение языка определяется по первому названию статьи
+    на главной странице журнала
+    """
+    selector = 'h3.text-m'
+    (element, _) = sec.finder(journal['url'], selector, first=True)
+    article_name = element.text
+    detect = detect_langs(article_name)
+    if detect[0].lang != 'en' and detect[0].prob < 0.85:
+        return True
+    return False

@@ -2,157 +2,121 @@ import json
 import os
 import time
 
-from langdetect import detect_langs
-
 from connection import get_recommend_vpn_list, get_all_vpn_list
 import containers
 import settings
 from domains_parser import format_to_json, json_handling
 import parser
 import support_func as support
+import load_functions as load
 
 
-
-def journal_runner(journal, issues, file, load_status):
+def article_runner(articles, issues, file):
     """
-    Проход по журналу и запись в json файл
+    Проход по статьям
     """
+    for article in articles:  # проход по статьям выпуска
+        is_last = False
+        article_info = parser.article_info_dict(article['url'])
+        if not article_info:
+            continue
+        article_output = {'article_name': article['name']}
+        article_output.update(article_info)
+        support.pretty_dict_print(indent=" "*12, ugly_dict=article_output)
+        if articles.is_last() and issues.is_last():
+            is_last = True
+        support.write_article(issues.current(), article_output, file, is_last)
+
+def issues_runner(subdomain, journal, issues, file, load_status, is_new=True):
+    """
+    Проход по выпускам журнала и запись в json файл
+    """
+    if is_new:
+        support.write_info(subdomain, journal, file)
     for issue in issues:  # проход по выпускам журнала
         last = False
         if load_status['articles']:
-            try:
-                with open('statement/articles', 'r') as f:
-                    content = f.read()
-                articles = containers.SimpleContainer(json.loads(content))
-            except FileNotFoundError:
-                article_titles = parser.articles_list(journal['url'], issue['url'])
-                if not article_titles:
-                    issues.save_statement()
-                    continue
-                articles = containers.SimpleContainer(article_titles)
-            finally:
-                load_status['articles'] = False
+            article_titles = load.load_articles(load_status, journal, issue)
         else:
             article_titles = parser.articles_list(journal['url'], issue['url'])
-            if not article_titles:
-                issues.save_statement()
-                continue
-            articles = containers.SimpleContainer(article_titles)
+        if not article_titles:
+            continue
+        articles = containers.SimpleContainer(article_titles)
         print(f'{" "*8}{issue}\n\n')
+        article_runner(articles, issues, file)
+    support.write_end(file)
 
-        for article in articles:  # проход по статьям выпуска            
-            article_info = parser.article_info_dict(article['url'])
-            if article_info is None:
-                continue
-            article_output = {'article_name': article['name']}
-            article_output.update(article_info)
-            support.pretty_dict_print(indent=" "*12, ugly_dict=article_output)
-            if articles.is_last() and issues.is_last():
-                last = True
-            support.write_article(issue, article_output, file, last)
-            articles.save_statement()
-        issues.save_statement()
-
-    return article_output
-
-
-def main():
+def journals_runner(subdomain: dict, journals, load_status):
     """
-    Обработка json'а
+    Проход по журналам
     """
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # Смена текущей директории на директории где расположен main.py
-    load_status = {'journals': True, 'issues': True, 'articles': True}
-    try:
-        with open('statement/subdomains', 'r') as file:
-            content = file.read()        
-        subdomains = containers.DomainsContainer(json.loads(content))
-    except FileNotFoundError:
-        json_form = format_to_json(settings.FILE_PATH)
-        json_loader = json.loads(json_form)
-        domain_dict = json_handling(json_loader)        
-        subdomains = containers.DomainsContainer(domain_dict)
+    for journal in journals:
+        if parser.is_not_english(journal):
+            print('Not English')  # пропускаем не английский журнал
+            journals.save_statement()
+            continue
+        file_path = f"{subdomain['subdomain']}/{journal['name'].replace(' ','').replace('/','')}.json"
+        if load_status['issues']:  # первый проход, попытака загрузки состояния
+            issues_info = load.load_issues(load_status, journal)
+        else:
+            issues_info = parser.issues_dict(journal['url'])
+        if not issues_info:  # если нет выпусков позже 2009 года
+            continue
+        issues = containers.IssuesContainer(issues_info)
 
-    # Иницилизация vpn
+        print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}\n\n')
+        load.mkdir_for_subdomain(subdomain)
+        if load_status['articles']:  # Если файл с записями уже есть, его нужно продолжить
+            is_new = False
+            lines = load.file_continue_lines(file_path)
+            with open(file_path, 'w', encoding='utf-8') as file:
+                if lines:
+                    file.writelines(lines)
+                else:
+                    is_new = True
+                issues_runner(subdomain, journal, issues, file, load_status, is_new=is_new)
+        else:
+            with open(file_path, 'w', encoding='utf-8') as file:
+                issues_runner(subdomain, journal, issues, file, load_status)
+
+def subdomains_runner(subdomains, load_status):
+    """
+    проход по сабдомейнам
+    """
+    print(type(subdomains))
+    for subdomain in subdomains: 
+        if load_status['journals']:  # первый проход, попытака загрузки состояния
+            journal_names = load.load_journals(load_status, subdomain)
+        else:
+            journal_names = parser.journal_names_list(subdomain['url'])
+        journals = containers.SimpleContainer(journal_names, is_journals=True)
+        print(subdomain)
+        journals_runner(subdomain, journals, load_status)
+        
+
+def initilization():
+    """
+    Инициализация
+        1. Хеадеров запросов
+        2. Рекомендованных VPN серверов
+        3. Всех VPN серверов 
+    """
+    support.init_headers()
     get_recommend_vpn_list()
     get_all_vpn_list()
 
-
-    for subdomain in subdomains:  # проход по сабдомейнам
-        if load_status['journals']:
-            try:
-                with open('statement/journals', 'r') as file:
-                    content = file.read()
-                journals = containers.SimpleContainer(json.loads(content), is_journals=True)
-            except FileNotFoundError:
-                journal_names = parser.journal_names_list(subdomain['url'])
-                journals = containers.SimpleContainer(journal_names, is_journals=True)
-            finally:
-                load_status['journals'] = False
-        else:
-            journal_names = parser.journal_names_list(subdomain['url'])
-            journals = containers.SimpleContainer(journal_names, is_journals=True)
-        print(f"{subdomain}")
-        
-
-        for journal in journals:
-            
-            if support.is_not_english(journal):
-                print('Not English')  # пропускаем не английский журнал
-                journals.save_statement()
-                continue
-
-            if load_status['issues']:
-                try:
-                    with open('statement/issues', 'r') as file:
-                        content = file.read()
-                    content = json.loads(content)
-                    # print(content)
-                    # print(type(content))
-                    issues = containers.IssuesContainer(content)
-                except FileNotFoundError:
-                    issues_info = parser.issues_dict(journal['url'])
-                    if issues_info == []:  # если нет выпусков позже 2009 года
-                        continue
-                    issues = containers.IssuesContainer(issues_info)
-                finally:
-                    load_status['issues'] = False
-            else:
-                issues_info = parser.issues_dict(journal['url'])
-                if issues_info == []:  # если нет выпусков позже 2009 года
-                    continue
-                issues = containers.IssuesContainer(issues_info)
-
-            print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}\n\n')
-            try:
-                os.mkdir(f"{subdomain['subdomain']}")
-            except OSError:
-                pass
-            if load_status['articles']:
-                try:
-                    with open('statement/articles', 'r') as f:
-                        pass
-                    with open(f"{subdomain['subdomain']}/{journal['name'].replace(' ','')}.json", 'r', encoding='utf-8') as file:
-                        lines = file.readlines()
-                    with open(f"{subdomain['subdomain']}/{journal['name'].replace(' ','')}.json", 'w', encoding='utf-8') as file:
-                        for line in lines:
-                            file.write(line)
-                        journal_runner(journal, issues, file, load_status)
-                        support.write_end(file)
-                except FileNotFoundError:
-                    with open(f"{subdomain['subdomain']}/{journal['name'].replace(' ','')}.json", 'w', encoding='utf-8') as file:
-                        support.write_info(subdomain, journal, file)
-                        journal_runner(journal, issues, file, load_status)
-                        support.write_end(file)
-            else:
-                with open(f"{subdomain['subdomain']}/{journal['name'].replace(' ','')}.json", 'w', encoding='utf-8') as file:
-                    support.write_info(subdomain, journal, file)
-                    journal_runner(journal, issues, file, load_status)
-                    support.write_end(file)
-            journals.save_statement()
-        subdomains.save_statement()
-
+def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # Смена текущей директории на директории где расположен main.py
+    load_status = {'journals': True, 'issues': True, 'articles': True}
+    try:  # Загрузка состояния по поддоменам
+        domain_dict = load.load_file('subdomains')
+    except FileNotFoundError:
+        domain_dict = json_handling(settings.FILE_PATH)
+    subdomains = containers.DomainsContainer(domain_dict)
+    initilization()    
+    subdomains_runner(subdomains, load_status)
 
 
 if __name__ == '__main__':
-    support.init_headers()  # иницилизация браузеров
+      # иницилизация браузеров
     main()

@@ -77,7 +77,6 @@ class DomainsContainer(object):
             print(f'{self.current_id_str}: {self.current_name}')  # Вывод на экран
 
             self.domain_id = 1
-
             while self.domain_level.get(
                     f'{self.primary_domain_id}.{self.domain_id}',
                     False):  # Цикл до тех пор пока существует элемент с таким ID
@@ -95,9 +94,7 @@ class DomainsContainer(object):
                     print(f'{" "*8}{self.current_id_str}: {self.current_name["name"], self.current_name["url"]}')
 
                     self.subdomain_id += 1
-
                 self.domain_id += 1
-
         return True
 
     def __iter__(self):
@@ -117,7 +114,6 @@ class DomainsContainer(object):
         (название основной раздела, название раздела,
         название подраздела, ссылка подраздела)
         """
-        
         if self.flag_stop_iteration:  # Если дошли до конца
             self.reset_statement()
             raise StopIteration
@@ -187,9 +183,4 @@ class DomainsContainer(object):
         """
         Возвращает текущий элемент
         """
-
-        self.output = {'primary': self.primary_domain_level.get(f'{self.primary_domain_id-1}', self.primary_domain_level['1']),
-                       'domain': self.domain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}', self.domain_level['1.1']),
-                       'subdomain': self.subdomain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}.{self.subdomain_id-1}',self.subdomain_level['1.1.1'])['name'],
-                       'url': self.subdomain_level.get(f'{self.primary_domain_id-1}.{self.domain_id-1}.{self.subdomain_id-1}',self.subdomain_level['1.1.1'])['url']}
         return self.output

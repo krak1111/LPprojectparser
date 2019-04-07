@@ -39,7 +39,8 @@ def format_to_json(file_path) -> dict:
     return domain_json
 
 
-def json_handling(json_dict) -> dict:
+def json_handling(file_path) -> dict:
+    json_dict = json.loads(format_to_json(file_path))
     """
     Преобразовывается в вид:
         {'primary domain 1':{
