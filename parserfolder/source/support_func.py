@@ -1,6 +1,5 @@
 import json
-
-
+import os
 
 def pretty_dict_print(indent, ugly_dict):
     """
@@ -19,7 +18,7 @@ def write_info(subdomain, journal, file):
     lbrace = '{'
     file.write(f'{lbrace}"primary": "{subdomain["primary"]}",\n')
     file.write(f'"domain": "{subdomain["domain"]}",\n')
-    file.write(f'"subdomain": "{subdomain["subdomain"]}",\n')
+    file.write(f'"subdomain": ["{subdomain["subdomain"]}"],\n')
     file.write(f'"journal name": {json.dumps(journal["name"])},\n')
     file.write(f'"articles": [\n')
     file.flush()
@@ -53,6 +52,23 @@ def write_end(file):
     file.write(f"{' '*4}]\n")
     file.write('}')
 
+def copy_processing(journal_name, subdomain_name):
+    walking_path = os.path.join(os.getcwd(), 'journals')
+    journal_name.replace('/', ' ')
+    file = f'{journal_name}.json'
+    for root, _, files in os.walk(walking_path):
+        if file in files:
+            file_path = os.path.join(os.getcwd(), root, file)
+            with open(file_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+            subdomains = json.loads('{'+lines[2][:-2]+'}')
+            subdomains['subdomain'].append(subdomain_name)
+            lines[2] = json.dumps(subdomains).replace('{','').replace('}','')+',\n'
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.writelines(lines)
+            return True
+    return False
+
 def counter_deco(func):
     """
     Счетчик вызовов функций
@@ -84,7 +100,8 @@ def give_header():
 @memorize
 def init_headers():
     output_list = []
-    with open('headers', 'r') as file:
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'headers')
+    with open(path, 'r') as file:
         for line in file:
             output_list.append({'user-agent': line.replace('\n', '')})
 

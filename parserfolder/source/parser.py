@@ -2,9 +2,9 @@ import time
 
 from langdetect import detect_langs
 
-from connection import get_request, change_vpn
-import secondary_functions as sec
-from settings import BASE_URL
+from .connection import get_request, change_vpn
+from . import secondary_functions as sec
+from .settings import BASE_URL
 
 
 def journal_names_list(url) -> list:

@@ -56,6 +56,7 @@ class DomainsContainer(object):
         self.primary_domain_id = 1
         self.domain_id = 1
         self.subdomain_id = 1
+        self.file_path = os.path.join(os.getcwd(), 'parserfolder' ,'statement', 'subdomains')
         self.save_statement()
 
     def print_all(self):
@@ -157,7 +158,7 @@ class DomainsContainer(object):
         self.sid = self.subdomain_id
         self.writen_dict = {}
 
-        while self.primary_domain_level.get(f'{self.pid}', False):
+        while self.primary_domain_level.get(f'{self.pid}', False):  # сохранение в виде json'a
             self.primary_dict = {}
             while self.domain_level.get(f'{self.pid}.{self.did}', False):
                 self.domain_list = []
@@ -172,12 +173,13 @@ class DomainsContainer(object):
             self.sid = 1
             self.pid += 1
         self.dumpen_dict = json.dumps(self.writen_dict)
-        with open("statement/subdomains", 'w', encoding='utf-8') as file:
+        
+        with open(self.file_path, 'w', encoding='utf-8') as file:
             file.write(self.dumpen_dict)
 
 
     def reset_statement(self):
-        os.remove("statement/subdomains")
+        os.remove(self.file_path)
 
     def current_subdomain(self):
         """

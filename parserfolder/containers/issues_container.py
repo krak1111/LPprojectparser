@@ -25,6 +25,7 @@ class IssuesContainer(object):
             self.year_id += 1
         self.year_id = 1
         self.issue_id = 1
+        self.file_path = os.path.join(os.getcwd(), 'parserfolder', 'statement', 'issues')
         self.save_statement()
 
     def __iter__(self):
@@ -58,7 +59,7 @@ class IssuesContainer(object):
         """
         Удаление файла с состоянием
         """
-        os.remove("statement/issues")
+        os.remove(self.file_path)
 
     def save_statement(self):
         """
@@ -77,7 +78,7 @@ class IssuesContainer(object):
             self.yid += 1
             self.iid = 1
 
-        with open('statement/issues', 'w') as file:
+        with open(self.file_path, 'w') as file:
             file.write(json.dumps(self.writen_dict))
 
     def print_all(self):

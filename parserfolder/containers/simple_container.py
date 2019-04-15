@@ -18,6 +18,7 @@ class SimpleContainer(object):
         else:
             self.f_name = 'articles'
         self.current_id = 1
+        self.file_path = os.path.join(os.getcwd(), 'parserfolder', 'statement', self.f_name)
         self.save_statement()
 
 
@@ -27,11 +28,11 @@ class SimpleContainer(object):
         while self.storage_dict.get(self.id, False):
             self.writen_list.append(self.storage_dict[self.id])
             self.id += 1
-        with open(f'statement/{self.f_name}', 'w') as file:
+        with open(self.file_path, 'w') as file:
             file.write(json.dumps(self.writen_list))
 
     def reset_statement(self):
-        os.remove(f"statement/{self.f_name}")
+        os.remove(self.file_path)
 
 
     def __iter__(self):

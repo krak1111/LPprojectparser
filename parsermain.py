@@ -2,14 +2,13 @@ import json
 import os
 import time
 
-from connection import get_recommend_vpn_list, get_all_vpn_list
-import containers
-import settings
-from domains_parser import format_to_json, json_handling
-import parser
-import support_func as support
-import load_functions as load
+from parserfolder.source import load_functions as load
+from parserfolder.source import support_func as support
+from parserfolder.source import parser, settings
+from parserfolder.source.connection import get_recommend_vpn_list, get_all_vpn_list
 
+
+from parserfolder import containers
 
 def article_runner(articles, issues, file):
     """
@@ -51,11 +50,15 @@ def journals_runner(subdomain: dict, journals, load_status):
     Проход по журналам
     """
     for journal in journals:
+        if support.copy_processing(journal['name'], subdomain['subdomain']):
+            continue
         if parser.is_not_english(journal):
             print('Not English')  # пропускаем не английский журнал
             journals.save_statement()
             continue
-        file_path = f"{subdomain['subdomain']}/{journal['name'].replace(' ','').replace('/','')}.json"
+        dir_path = os.path.join(os.getcwd(), 'journals', subdomain['primary'], subdomain['domain'], subdomain['subdomain'])
+        print(os.path.exists(dir_path))
+        file_path = os.path.join(dir_path, f"{journal['name'].replace('/',' ')}.json")
         if load_status['issues']:  # первый проход, попытака загрузки состояния
             issues_info = load.load_issues(load_status, journal)
         else:
@@ -65,7 +68,6 @@ def journals_runner(subdomain: dict, journals, load_status):
         issues = containers.IssuesContainer(issues_info)
 
         print(f'{" "*4}{"{"}"journal_name": "{journal["name"]}"{"}"}\n\n')
-        load.mkdir_for_subdomain(subdomain)
         if load_status['articles']:  # Если файл с записями уже есть, его нужно продолжить
             is_new = False
             lines = load.file_continue_lines(file_path)
@@ -84,7 +86,8 @@ def subdomains_runner(subdomains, load_status):
     проход по сабдомейнам
     """
     print(type(subdomains))
-    for subdomain in subdomains: 
+    for subdomain in subdomains:
+        load.mkdir_for_subdomain(subdomain)
         if load_status['journals']:  # первый проход, попытака загрузки состояния
             journal_names = load.load_journals(load_status, subdomain)
         else:
@@ -101,19 +104,27 @@ def initilization():
         2. Рекомендованных VPN серверов
         3. Всех VPN серверов 
     """
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # Смена текущей директории на директории где расположен main.py
     support.init_headers()
     get_recommend_vpn_list()
     get_all_vpn_list()
+    dir_path = os.path.join(os.getcwd(), 'parserfolder', 'statement')
+    print(os.path.exists(dir_path))
+    if not os.path.exists(dir_path):
+        os.mkdir(dir_path)
 
-def main():
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))  # Смена текущей директории на директории где расположен main.py
+def main():    
+    initilization()
     load_status = {'journals': True, 'issues': True, 'articles': True}
-    try:  # Загрузка состояния по поддоменам
-        domain_dict = load.load_file('subdomains')
-    except FileNotFoundError:
-        domain_dict = json_handling(settings.FILE_PATH)
+    filepath = os.path.join(os.getcwd(), 'parserfolder', 'statement', 'subdomains')
+    if os.path.exists(filepath):  # Загрузка  по поддоменам
+        domain_dict = load.load_file(filepath)
+    else:
+        path_to_start = os.path.join(os.getcwd(), 'parserfolder', 'source', 'input.json')
+        with open(path_to_start) as f:
+            domain_dict = json.loads(f.read())
     subdomains = containers.DomainsContainer(domain_dict)
-    initilization()    
+    
     subdomains_runner(subdomains, load_status)
 
 

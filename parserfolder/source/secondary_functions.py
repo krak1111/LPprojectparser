@@ -1,8 +1,8 @@
 import json
 import re
 
-from settings import BASE_URL, DATE_DICT
-from connection import get_request, change_vpn
+from .settings import BASE_URL, DATE_DICT
+from .connection import get_request, change_vpn
 """
 Здесь вспомогательные функции, которые используются основными функциями парсера
 """

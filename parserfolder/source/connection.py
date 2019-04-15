@@ -5,7 +5,7 @@ import subprocess
 from requests.exceptions import ConnectionError
 import requests_html as rh
 
-import support_func as support
+from . import support_func as support
 
 VPN_STATUS = 'expressvpn status'
 VPN_LIST = 'expressvpn list all'
@@ -80,24 +80,17 @@ def get_request(url):
             text = request.text
             if 'There was a problem providing the content you requested' in text:
                 print('Banned')
-                
-                if attemp >= max_attemps:
-                    time.sleep(10)
-                    next_vpn_server.numerator = 1
-                    attemp = 1
                 change_vpn()  # Ветка, если мы забанены
                 attemp += 1
                 session = rh.HTMLSession()
+                time.sleep(2)
                 continue
             break
         except ConnectionError:  # ветка, если нет соединения
             print('Lose connection')
-            if attemp >= max_attemps:
-                time.sleep(10)
-                next_vpn_server.numerator = 1
-                attemp = 1
             change_vpn()
             session = rh.HTMLSession()
+            time.sleep(2)
             attemp += 1
 
     return request
