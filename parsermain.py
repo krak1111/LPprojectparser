@@ -50,7 +50,7 @@ def journals_runner(subdomain: dict, journals, load_status):
     Проход по журналам
     """
     for journal in journals:
-        if support.copy_processing(journal['name'], subdomain['subdomain']):
+        if support.copy_processing(journal['name'], subdomain['subdomain']) and not load_status['issues']:
             continue
         if parser.is_not_english(journal):
             print('Not English')  # пропускаем не английский журнал
@@ -129,5 +129,4 @@ def main():
 
 
 if __name__ == '__main__':
-      # иницилизация браузеров
     main()

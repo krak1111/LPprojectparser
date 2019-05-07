@@ -13,6 +13,14 @@ VPN_DISCONNECT = 'expressvpn disconnect'
 
 def run_command(command):
     p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
+    print('waiting for comlete')
+    if 'expressvpn connect' in command:
+        print('connect')
+        (mes, err) = p.communicate()
+        while not mes:
+            time.sleep(0.3)
+        return(str(mes).replace('\\t', ' ').replace('\\n', ' ').replace('b\'', '').replace('\'', '')
+                .replace('b"', ''))
     return list([str(v).replace('\\t', ' ').replace('\\n', ' ').replace('b\'', '').replace('\'', '')
                 .replace('b"', '')
                  for v in iter(p.stdout.readline, b'')])
@@ -89,9 +97,12 @@ def get_request(url):
         except ConnectionError:  # ветка, если нет соединения
             print('Lose connection')
             change_vpn()
+            if attemp >= 5:
+                raise ConnectionError("Can't connect")
             session = rh.HTMLSession()
             time.sleep(2)
             attemp += 1
+
 
     return request
 
@@ -111,9 +122,11 @@ def change_vpn():
     Сервер из списка выбирается случайным образом.
     """
     print('Changing VPN, relax please')
-    run_command(VPN_DISCONNECT)
+    print(run_command(VPN_DISCONNECT))
+    print('complete')
     vpn_server = next_vpn_server()
-    connect_alias(vpn_server)
+    print(connect_alias(vpn_server))
+    print('complete')
     return True
 
 @support.counter_deco
