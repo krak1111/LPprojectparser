@@ -8,7 +8,7 @@ expressvpn-python==1.0
 fake-useragent==0.1.11
 idna==2.8
 langdetect==1.0.7
-lxml==4.3.2
+lxml==4.6.5
 parse==1.11.1
 pyee==5.0.0
 pyppeteer==0.0.25
